@@ -78,7 +78,10 @@ export default async function handler(req: any, res: any) {
       : platform === 'x'
         ? '@herecomeyashrai'
         : 'Yash Rai';
-  const url = typeof body.url === 'string' ? body.url : '';
+  const url      = typeof body.url === 'string' ? body.url : '';
+  const likes    = typeof body.likes    === 'number' ? body.likes    : 0;
+  const comments = typeof body.comments === 'number' ? body.comments : 0;
+  const shares   = typeof body.shares   === 'number' ? body.shares   : 0;
   const postedAt =
     typeof body.postedAt === 'string'
       ? body.postedAt
@@ -115,9 +118,9 @@ export default async function handler(req: any, res: any) {
         [NOTION_PROP.url]: {
           url: url || null,
         },
-        [NOTION_PROP.likes]: { number: 0 },
-        [NOTION_PROP.comments]: { number: 0 },
-        [NOTION_PROP.shares]: { number: 0 },
+        [NOTION_PROP.likes]: { number: likes },
+        [NOTION_PROP.comments]: { number: comments },
+        [NOTION_PROP.shares]: { number: shares },
         [NOTION_PROP.pinned]: { checkbox: false },
         [NOTION_PROP.published]: { checkbox: true },
       },
