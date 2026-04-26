@@ -87,18 +87,18 @@
   }
 
   function relativeToDate(raw) {
-    // Strip noise like " • 🌐", "Edited •", "•"
-    const text = raw.split('•')[0].replace(/edited/i, '').trim().toLowerCase();
-    if (!text) return null;
-
+    // LinkedIn shows "Author • 1w • 🌐" — check every segment separated by • or newlines
+    const segments = raw.split(/[•\n]+/).map(s => s.replace(/edited/i, '').trim().toLowerCase()).filter(Boolean);
     const now = new Date();
     const clone = (offset) => { const d = new Date(now); d.setDate(d.getDate() + offset); return d.toISOString().split('T')[0]; };
 
-    if (/^\d+[mh]$/.test(text)) return clone(0);            // minutes / hours → today
-    const d = text.match(/^(\d+)d$/);   if (d)  return clone(-parseInt(d[1]));
-    const w = text.match(/^(\d+)w$/);   if (w)  return clone(-parseInt(w[1]) * 7);
-    const mo = text.match(/^(\d+)mo$/); if (mo) { const dt = new Date(now); dt.setMonth(dt.getMonth() - parseInt(mo[1])); return dt.toISOString().split('T')[0]; }
-    const yr = text.match(/^(\d+)yr$/); if (yr) { const dt = new Date(now); dt.setFullYear(dt.getFullYear() - parseInt(yr[1])); return dt.toISOString().split('T')[0]; }
+    for (const text of segments) {
+      if (/^\d+[mh]$/.test(text)) return clone(0);
+      const d = text.match(/^(\d+)d$/);   if (d)  return clone(-parseInt(d[1]));
+      const w = text.match(/^(\d+)w$/);   if (w)  return clone(-parseInt(w[1]) * 7);
+      const mo = text.match(/^(\d+)mo$/); if (mo) { const dt = new Date(now); dt.setMonth(dt.getMonth() - parseInt(mo[1])); return dt.toISOString().split('T')[0]; }
+      const yr = text.match(/^(\d+)yr$/); if (yr) { const dt = new Date(now); dt.setFullYear(dt.getFullYear() - parseInt(yr[1])); return dt.toISOString().split('T')[0]; }
+    }
     return null;
   }
 
