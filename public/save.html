@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Save to Portfolio</title>
+  <style>
+    body { font-family: system-ui, sans-serif; display: flex; align-items: center; justify-content: center; min-height: 100vh; margin: 0; background: #0a0a0a; color: #e5e5e5; }
+    .box { text-align: center; padding: 2rem; max-width: 360px; }
+    .icon { font-size: 2.5rem; margin-bottom: 1rem; }
+    p { margin: 0.5rem 0; font-size: 0.9rem; color: #888; }
+    .msg { font-size: 1.1rem; font-weight: 500; color: #e5e5e5; margin-bottom: 0.5rem; }
+  </style>
+</head>
+<body>
+<div class="box">
+  <div class="icon" id="icon">⏳</div>
+  <div class="msg" id="msg">Saving to portfolio…</div>
+  <p id="sub"></p>
+</div>
+<script>
+  const SECRET = 'f4ae1531f9a6e6ad0783d3ade1f04361be5d246bcc998d2252d9714b09a81065';
+  const params = new URLSearchParams(location.search);
+  const content = params.get('c') || '';
+  const url = params.get('u') || '';
+  const platform = params.get('p') || 'linkedin';
+
+  function show(icon, msg, sub) {
+    document.getElementById('icon').textContent = icon;
+    document.getElementById('msg').textContent = msg;
+    document.getElementById('sub').textContent = sub || '';
+  }
+
+  if (!content) {
+    show('⚠️', 'No content found.', 'Go back and highlight the post text first.');
+  } else {
+    fetch('/api/ingest', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + SECRET },
+      body: JSON.stringify({ content, url, platform }),
+    })
+      .then(r => r.json())
+      .then(d => {
+        if (d.ok) {
+          show('✓', 'Saved to portfolio!', 'Appears on site within ~5 min. You can close this tab.');
+        } else {
+          show('✗', 'Save failed: ' + (d.error || 'unknown'), 'Check the browser console for details.');
+        }
+      })
+      .catch(e => show('✗', 'Network error', e.message));
+  }
+</script>
+</body>
+</html>
