@@ -26,6 +26,7 @@
   const likes    = parseInt(params.get('lk') || '0', 10);
   const comments = parseInt(params.get('cm') || '0', 10);
   const shares   = parseInt(params.get('sh') || '0', 10);
+  const postedAt = params.get('at') || new Date().toISOString().split('T')[0];
 
   function show(icon, msg, sub) {
     document.getElementById('icon').textContent = icon;
@@ -39,13 +40,13 @@
     fetch('/api/ingest', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + SECRET },
-      body: JSON.stringify({ content, url, platform, likes, comments, shares }),
+      body: JSON.stringify({ content, url, platform, likes, comments, shares, postedAt }),
     })
       .then(r => r.json())
       .then(d => {
         if (d.ok) {
-          const meta = likes || comments ? `❤️ ${likes}  💬 ${comments}  🔁 ${shares}` : '';
-          show('✓', 'Saved to portfolio!', (meta ? meta + '\n' : '') + 'Appears on site within ~5 min.');
+          const meta = `❤️ ${likes}  💬 ${comments}  🔁 ${shares}  📅 ${postedAt}`;
+          show('✓', 'Saved to portfolio!', meta + '\nAppears on site within ~5 min.');
         } else {
           show('✗', 'Save failed: ' + (d.error || 'unknown'), 'Check the browser console for details.');
         }
