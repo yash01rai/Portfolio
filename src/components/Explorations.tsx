@@ -54,10 +54,10 @@ export default function Explorations() {
           // p=0.22–0.96: hold visible (~244vh of the 280vh pin = 87% of pin)
           // p=0.96–1.00: fade out as section exits top of viewport (~13vh)
           let opacity: number;
-          if (p < 0.15)       opacity = 0;
-          else if (p < 0.22)  opacity = (p - 0.15) / 0.07;
-          else if (p < 0.88)  opacity = 1;
-          else if (p < 0.94)  opacity = 1 - (p - 0.88) / 0.06;
+          if (p < 0.22)       opacity = 0;
+          else if (p < 0.30)  opacity = (p - 0.22) / 0.08;
+          else if (p < 0.75)  opacity = 1;
+          else if (p < 0.83)  opacity = 1 - (p - 0.75) / 0.08;
           else                opacity = 0;
           setOpacity(opacity);
         },
@@ -109,7 +109,7 @@ export default function Explorations() {
         ref={contentRef} 
         className="h-screen w-full flex flex-col items-center justify-center pointer-events-none z-30"
       >
-        <div className="text-center px-4 max-w-2xl mx-auto backdrop-blur-md bg-bg/30 p-8 rounded-3xl border border-white/5 pointer-events-auto">
+        <div className="text-center px-4 max-w-2xl mx-auto backdrop-blur-md bg-bg/60 p-8 rounded-3xl border border-white/5 pointer-events-auto">
           <div className="flex items-center justify-center gap-4 mb-6">
             <div className="w-8 h-px bg-stroke" />
             <span className="text-xs text-muted uppercase tracking-[0.3em]">Explorations</span>
