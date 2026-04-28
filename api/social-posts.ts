@@ -1,6 +1,6 @@
 import { Client, isFullPage } from '@notionhq/client';
-import type { PageObjectResponse } from '@notionhq/client/build/src/api-endpoints';
-import type { SocialFeedItem } from '../src/types/socialFeed';
+import type { PageObjectResponse } from '@notionhq/client/build/src/api-endpoints.js';
+import type { SocialFeedItem } from '../src/types/socialFeed.js';
 
 const LINKEDIN_PROFILE_URL = 'https://www.linkedin.com/in/paintedincodebyyashrai/';
 
@@ -18,6 +18,10 @@ const PROP = {
   featured: 'Featured',   // Checkbox — always shown regardless of recency
   published: 'Published', // Checkbox — gate before items appear on site
 } as const;
+
+function isQueryablePage(page: Parameters<typeof isFullPage>[0]): page is PageObjectResponse {
+  return isFullPage(page);
+}
 
 function extractProps(page: PageObjectResponse, platform: 'linkedin' | 'x'): SocialFeedItem | null {
   const p = page.properties;
@@ -101,7 +105,7 @@ export default async function handler(req: any, res: any) {
     });
 
     const posts: SocialFeedItem[] = response.results
-      .filter(isFullPage)
+      .filter(isQueryablePage)
       .map((page) => extractProps(page, platform))
       .filter((post): post is SocialFeedItem => post !== null);
 
