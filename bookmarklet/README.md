@@ -36,7 +36,7 @@ Click **Save**.
 
 ---
 
-## Daily use
+## Daily use — LinkedIn
 
 1. Open a LinkedIn post you want on your portfolio
 2. **Highlight** the post text (click and drag)
@@ -44,7 +44,13 @@ Click **Save**.
 4. You'll see an alert: `Saved to portfolio! N chars. Appears in ~5 min.`
 5. Done — the post appears on your portfolio's LinkedIn tab within 5 minutes
 
-Works on **X/Twitter** too — just highlight the tweet text and click the same bookmark.
+## Daily use — X / Twitter
+
+1. Open the tweet you want to feature
+2. **Click the tweet's timestamp** to open its permalink (URL becomes `x.com/<user>/status/<id>`) — this step is required
+3. Click **Save to Portfolio** in your bookmarks bar (no text selection needed — the bookmarklet reads the tweet text automatically)
+4. You'll see an alert confirming it was saved
+5. The tweet appears as a live embedded card on your portfolio's X tab within 5 minutes
 
 ---
 
@@ -52,7 +58,8 @@ Works on **X/Twitter** too — just highlight the tweet text and click the same 
 
 | Alert message | Cause | Fix |
 |---|---|---|
-| "Highlight the post text first" | Nothing selected | Highlight the post body text, then click |
+| "Highlight the post text first" | Nothing selected on LinkedIn | Highlight the post body text, then click |
+| "Open the tweet itself first" | On X but not on a tweet permalink | Click the tweet's timestamp to get the `/status/<id>` URL, then click the bookmark |
 | "Save failed: unauthorized" | Wrong secret in bookmark | Regenerate bookmark with correct `INGEST_SECRET` from `.env.local` |
 | "Save failed: notion_not_configured" | Env vars missing | Check `NOTION_TOKEN` and `NOTION_DATABASE_ID` are set in Vercel |
 | "Save failed: notion_error" | Notion API issue | Check Notion integration is connected to the database |

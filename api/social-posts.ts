@@ -15,10 +15,11 @@ const PROP = {
   comments: 'Comments',   // Number
   shares: 'Shares',       // Number
   pinned: 'Pinned',       // Checkbox
+  featured: 'Featured',   // Checkbox — always shown regardless of recency
   published: 'Published', // Checkbox — gate before items appear on site
 } as const;
 
-function extractProps(page: PageObjectResponse): SocialFeedItem | null {
+function extractProps(page: PageObjectResponse, platform: 'linkedin' | 'x'): SocialFeedItem | null {
   const p = page.properties;
 
   const contentProp = p[PROP.content];
@@ -27,11 +28,12 @@ function extractProps(page: PageObjectResponse): SocialFeedItem | null {
 
   if (!content.trim()) return null;
 
+  const defaultHandle = platform === 'x' ? '@herecomeyashrai' : 'Yash Rai';
   const handleProp = p[PROP.handle];
   const handle =
     handleProp?.type === 'rich_text'
-      ? handleProp.rich_text.map((t) => t.plain_text).join('')
-      : 'Yash Rai';
+      ? (handleProp.rich_text.map((t) => t.plain_text).join('') || defaultHandle)
+      : defaultHandle;
 
   const postedAtProp = p[PROP.postedAt];
   const publishedAt =
@@ -39,17 +41,19 @@ function extractProps(page: PageObjectResponse): SocialFeedItem | null {
       ? (postedAtProp.date?.start ?? page.created_time)
       : page.created_time;
 
+  const defaultUrl = platform === 'x' ? 'https://x.com/herecomeyashrai' : LINKEDIN_PROFILE_URL;
   const urlProp = p[PROP.url];
-  const url = urlProp?.type === 'url' ? (urlProp.url ?? LINKEDIN_PROFILE_URL) : LINKEDIN_PROFILE_URL;
+  const url = urlProp?.type === 'url' ? (urlProp.url ?? defaultUrl) : defaultUrl;
 
   const likesProp = p[PROP.likes];
   const commentsProp = p[PROP.comments];
   const sharesProp = p[PROP.shares];
   const pinnedProp = p[PROP.pinned];
+  const featuredProp = p[PROP.featured];
 
   return {
     id: page.id,
-    platform: 'linkedin',
+    platform,
     authorName: 'Yash Rai',
     handle,
     publishedAt,
@@ -62,11 +66,12 @@ function extractProps(page: PageObjectResponse): SocialFeedItem | null {
     },
     source: 'api',
     pinned: pinnedProp?.type === 'checkbox' ? pinnedProp.checkbox : false,
+    featured: featuredProp?.type === 'checkbox' ? featuredProp.checkbox : false,
   };
 }
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-export default async function handler(_req: any, res: any) {
+export default async function handler(req: any, res: any) {
   res.setHeader('Cache-Control', 's-maxage=300, stale-while-revalidate=3600');
   res.setHeader('Access-Control-Allow-Origin', '*');
 
@@ -77,6 +82,9 @@ export default async function handler(_req: any, res: any) {
     return res.status(200).json({ posts: [], source: 'unconfigured' });
   }
 
+  const platform: 'linkedin' | 'x' =
+    (req.query?.platform as string) === 'x' ? 'x' : 'linkedin';
+
   try {
     const notion = new Client({ auth: token });
 
@@ -85,7 +93,7 @@ export default async function handler(_req: any, res: any) {
       filter: {
         and: [
           { property: PROP.published, checkbox: { equals: true } },
-          { property: PROP.platform, select: { equals: 'linkedin' } },
+          { property: PROP.platform, select: { equals: platform } },
         ],
       },
       sorts: [{ property: PROP.postedAt, direction: 'descending' }],
@@ -94,7 +102,7 @@ export default async function handler(_req: any, res: any) {
 
     const posts: SocialFeedItem[] = response.results
       .filter(isFullPage)
-      .map(extractProps)
+      .map((page) => extractProps(page, platform))
       .filter((post): post is SocialFeedItem => post !== null);
 
     return res.status(200).json({ posts });

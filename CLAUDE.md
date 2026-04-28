@@ -64,3 +64,18 @@ Defined as CSS variables in global CSS:
 - `border-stroke` — default border color
 - `accent-gradient` — gradient class for hover accents
 - `font-display` — Instrument Serif italic (used for decorative headings)
+
+## graphify
+
+A knowledge graph of this codebase lives in `graphify-out/graph.json` (if it exists).
+
+**Before answering questions about architecture, dependencies, or how components connect:** check the graph first with `/graphify query "<question>"`. It contains extracted relationships (calls, imports, references) and inferred connections that are faster to traverse than re-reading files.
+
+**After making code changes:** if `graphify-out/graph.json` exists, rebuild it with `/graphify . --update` so the graph stays current. Code-only changes are free (AST only, no LLM).
+
+**To build the graph for the first time:** run `/graphify .` from the project root.
+
+Graph outputs:
+- `graphify-out/graph.html` — interactive visualization, open in browser
+- `graphify-out/GRAPH_REPORT.md` — audit report with god nodes, surprising connections, suggested questions
+- `graphify-out/graph.json` — raw graph data for queries

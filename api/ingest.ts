@@ -20,7 +20,21 @@ const CORS_HEADERS = {
   'Access-Control-Max-Age': '86400',
 };
 
-function setCors(res: any) {
+interface ApiResponse {
+  setHeader(name: string, value: string): void;
+  status(code: number): {
+    end(): unknown;
+    json(body: unknown): unknown;
+  };
+}
+
+interface ApiRequest {
+  method?: string;
+  headers: Record<string, string | string[] | undefined>;
+  body?: unknown;
+}
+
+function setCors(res: ApiResponse) {
   for (const [key, value] of Object.entries(CORS_HEADERS)) {
     res.setHeader(key, value);
   }
@@ -36,8 +50,7 @@ function safeEqual(a: string, b: string): boolean {
   return result === 0;
 }
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-export default async function handler(req: any, res: any) {
+export default async function handler(req: ApiRequest, res: ApiResponse) {
   setCors(res);
 
   // Handle CORS preflight
@@ -51,7 +64,8 @@ export default async function handler(req: any, res: any) {
 
   // Validate bearer secret
   const secret = process.env.INGEST_SECRET;
-  const authHeader: string = req.headers['authorization'] ?? '';
+  const headerValue = req.headers.authorization;
+  const authHeader = Array.isArray(headerValue) ? headerValue[0] ?? '' : headerValue ?? '';
   const token = authHeader.startsWith('Bearer ') ? authHeader.slice(7) : '';
 
   if (!secret || !token || !safeEqual(token, secret)) {

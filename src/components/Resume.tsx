@@ -141,7 +141,7 @@ export default function Resume() {
                 <span className="w-2 h-2 rounded-full bg-green-400 shrink-0 animate-pulse shadow-[0_0_8px_rgba(74,222,128,0.5)]" />
                 <div>
                   <div className="text-xs text-green-400 font-medium mb-0.5">Open to opportunities</div>
-                  <div className="text-[11px] text-muted">Frontend / Full-stack roles · Remote or Bengaluru</div>
+                  <div className="text-[11px] text-muted">Frontend / Full-stack roles · Remote or Bengaluru or Pune</div>
                 </div>
               </div>
             </div>

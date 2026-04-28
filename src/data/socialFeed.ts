@@ -21,12 +21,14 @@ export const LINKEDIN_EMBED_POSTS: LinkedInEmbedPost[] = [
   // },
 ];
 
+const LI_HANDLE = 'Senior Software Engineer · Frontend Architecture';
+
 export const CURATED_LINKEDIN_POSTS: SocialFeedItem[] = [
   {
     id: 'linkedin-highlight-ui-contracts',
     platform: 'linkedin',
     authorName: 'Yash Rai',
-    handle: 'Yash Rai',
+    handle: LI_HANDLE,
     publishedAt: '2026-04-10T10:00:00.000Z',
     url: LINKEDIN_PROFILE_URL,
     content:
@@ -39,7 +41,7 @@ export const CURATED_LINKEDIN_POSTS: SocialFeedItem[] = [
     id: 'linkedin-ai-scaffolding',
     platform: 'linkedin',
     authorName: 'Yash Rai',
-    handle: 'Yash Rai',
+    handle: LI_HANDLE,
     publishedAt: '2026-04-21T10:00:00.000Z',
     url: LINKEDIN_PROFILE_URL,
     content:
@@ -51,7 +53,7 @@ export const CURATED_LINKEDIN_POSTS: SocialFeedItem[] = [
     id: 'linkedin-module-federation',
     platform: 'linkedin',
     authorName: 'Yash Rai',
-    handle: 'Yash Rai',
+    handle: LI_HANDLE,
     publishedAt: '2026-04-17T10:00:00.000Z',
     url: LINKEDIN_PROFILE_URL,
     content:
@@ -63,7 +65,7 @@ export const CURATED_LINKEDIN_POSTS: SocialFeedItem[] = [
     id: 'linkedin-performance-promise',
     platform: 'linkedin',
     authorName: 'Yash Rai',
-    handle: 'Yash Rai',
+    handle: LI_HANDLE,
     publishedAt: '2026-04-10T10:00:00.000Z',
     url: LINKEDIN_PROFILE_URL,
     content:

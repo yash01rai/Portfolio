@@ -17,4 +17,5 @@ export interface SocialFeedItem {
   metrics: SocialMetrics;
   source: 'api' | 'curated' | 'fallback';
   pinned?: boolean;
+  featured?: boolean;
 }

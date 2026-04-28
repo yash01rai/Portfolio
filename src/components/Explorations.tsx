@@ -1,4 +1,4 @@
-import { useEffect, useRef, type ComponentType } from 'react';
+import { useLayoutEffect, useRef, type ComponentType } from 'react';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { ArrowUpRight } from 'lucide-react';
@@ -28,48 +28,44 @@ const ITEMS: ExperimentItem[] = [
 ];
 
 export default function Explorations() {
-  const containerRef = useRef<HTMLDivElement>(null);
+  const containerRef = useRef<HTMLElement>(null);
   const contentRef = useRef<HTMLDivElement>(null);
   const col1Ref = useRef<HTMLDivElement>(null);
   const col2Ref = useRef<HTMLDivElement>(null);
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     const ctx = gsap.context(() => {
-      // Opacity driven directly from scroll progress via onUpdate.
-      // No scrub lag, no competing tweens, no y-transform conflict with pin.
-      // Reversible cleanly in both scroll directions.
-      gsap.set(contentRef.current, { opacity: 0 });
-      const setOpacity = gsap.quickSetter(contentRef.current, "opacity");
+      // The card is CSS-sticky instead of GSAP-pinned, so it stays bounded by this
+      // section even when upstream sections change height before ScrollTrigger refreshes.
+      gsap.set(contentRef.current, { autoAlpha: 0 });
+      const setCardVisibility = (opacity: number) => {
+        gsap.set(contentRef.current, { autoAlpha: opacity });
+      };
 
-      // Scroll range: "top center" → "bottom top" = 50vh entry + 280vh (full section) = 330vh
-      // Pin fires at scrollY = sectionTop → progress = 50/330 ≈ 0.15
-      ScrollTrigger.create({
-        trigger: containerRef.current,
-        start: "top center",
-        end: "bottom top",     // track until section has fully scrolled past (Stats takes over)
-        onUpdate: (self) => {
-          const p = self.progress;
-          // p<0.15: invisible while section enters (~50vh, before pin fires)
-          // p=0.15–0.22: fade in (~23vh, right as pin fires)
-          // p=0.22–0.96: hold visible (~244vh of the 280vh pin = 87% of pin)
-          // p=0.96–1.00: fade out as section exits top of viewport (~13vh)
-          let opacity: number;
-          if (p < 0.22)       opacity = 0;
-          else if (p < 0.30)  opacity = (p - 0.22) / 0.08;
-          else if (p < 0.75)  opacity = 1;
-          else if (p < 0.83)  opacity = 1 - (p - 0.75) / 0.08;
-          else                opacity = 0;
-          setOpacity(opacity);
-        },
-      });
-
-      // Pin extends for the ENTIRE section — card stays centered until Stats appears
       ScrollTrigger.create({
         trigger: containerRef.current,
         start: "top top",
-        end: "bottom top",    // release only when section has fully scrolled past
-        pin: contentRef.current,
-        pinSpacing: false,
+        end: "bottom bottom",
+        invalidateOnRefresh: true,
+        // Force hard boundaries because onUpdate can miss exact p=0/1 on fast scroll.
+        onLeave: () => setCardVisibility(0),
+        onLeaveBack: () => setCardVisibility(0),
+        onUpdate: (self) => {
+          const p = self.progress;
+          const sectionH = containerRef.current?.offsetHeight ?? 0;
+          const vh = window.innerHeight;
+          const scrollDistance = Math.max(1, sectionH - vh);
+          const fadeInEnd = Math.min(0.35, (vh * 0.15) / scrollDistance);
+          const fadeOutStart = Math.max(fadeInEnd, 1 - (vh * 0.25) / scrollDistance);
+
+          let opacity: number;
+          if (p <= 0) opacity = 0;
+          else if (p < fadeInEnd) opacity = p / fadeInEnd;
+          else if (p < fadeOutStart) opacity = 1;
+          else opacity = 1 - (p - fadeOutStart) / Math.max(0.001, 1 - fadeOutStart);
+
+          setCardVisibility(Math.max(0, Math.min(1, opacity)));
+        },
       });
 
       // Parallax for Column 1 (moves faster upwards)
@@ -98,16 +94,27 @@ export default function Explorations() {
 
     }, containerRef);
 
-    return () => ctx.revert();
+    // Refresh after Notion/image hydration so parallax/fade thresholds use final layout.
+    const refresh = () => ScrollTrigger.refresh();
+    const t1 = setTimeout(refresh, 500);
+    const t2 = setTimeout(refresh, 2000);
+    window.addEventListener("load", refresh);
+
+    return () => {
+      ctx.revert();
+      clearTimeout(t1);
+      clearTimeout(t2);
+      window.removeEventListener("load", refresh);
+    };
   }, []);
 
   return (
-    <section ref={containerRef} className="relative min-h-[280vh] bg-bg overflow-hidden">
+    <section ref={containerRef} className="relative isolate min-h-[280vh] bg-bg overflow-x-clip">
       
-      {/* Pinned Center Content (z-10) */}
+      {/* Section-bounded sticky center content */}
       <div 
         ref={contentRef} 
-        className="h-screen w-full flex flex-col items-center justify-center pointer-events-none z-30"
+        className="sticky top-0 h-screen w-full flex flex-col items-center justify-center pointer-events-none z-30"
       >
         <div className="text-center px-4 max-w-2xl mx-auto backdrop-blur-md bg-bg/60 p-8 rounded-3xl border border-white/5 pointer-events-auto">
           <div className="flex items-center justify-center gap-4 mb-6">

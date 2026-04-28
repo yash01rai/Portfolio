@@ -14,7 +14,7 @@ function App() {
   const [isLoading, setIsLoading] = useState(true);
 
   return (
-    <div className="relative bg-bg min-h-screen text-text-primary overflow-hidden">
+    <div className="relative bg-bg min-h-screen text-text-primary overflow-x-clip">
       {isLoading ? (
         <LoadingScreen onComplete={() => setIsLoading(false)} />
       ) : (

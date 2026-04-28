@@ -4,21 +4,40 @@
 //   1. Minify this file (see README.md for the one-liner).
 //   2. Install the minified one-liner as a browser bookmark.
 //   3. On LinkedIn: highlight the post text → click the bookmark → done.
+//   4. On X: open the tweet permalink (/status/<id>), then click the bookmark.
 
 (async () => {
   const BASE = 'https://portfolio-yash01rais-projects.vercel.app';
 
-  const content = window.getSelection().toString().trim();
+  const host = window.location.hostname;
+  const platform =
+    host.includes('linkedin') ? 'linkedin' :
+    (host.includes('x.com') || host.includes('twitter')) ? 'x' :
+    'linkedin';
+
+  // X: must be on a tweet permalink, not the home feed
+  if (platform === 'x' && !/\/status\/\d+/.test(window.location.href)) {
+    alert('Open the tweet itself first (URL must contain /status/<id>), then click the bookmark.');
+    return;
+  }
+
+  let content = window.getSelection().toString().trim();
+
+  // X: no selection needed — scrape text from the tweet article
+  if (!content && platform === 'x') {
+    try {
+      const article = document.querySelector('article[data-testid="tweet"]');
+      const textNode = article && article.querySelector('[data-testid="tweetText"]');
+      content = (textNode && textNode.innerText && textNode.innerText.trim()) || '(tweet)';
+    } catch (_) {
+      content = '(tweet)';
+    }
+  }
+
   if (!content) {
     alert('Highlight the post text first, then click the bookmark.');
     return;
   }
-
-  const host = window.location.hostname;
-  const platform =
-    host.includes('linkedin') ? 'linkedin' :
-    host.includes('x.com') || host.includes('twitter') ? 'x' :
-    'linkedin';
 
   // Parse "1,234" / "1.2K" / "2.5M" → integer
   function parseCount(raw) {
@@ -102,10 +121,11 @@
     return null;
   }
 
-  const likes    = scrapeCount(['reaction', 'like']);
-  const comments = scrapeCount(['comment']);
-  const shares   = scrapeCount(['repost', 'reshare']);
-  const postedAt = scrapePostedAt();
+  // X embed shows live counts — skip scraping for x posts
+  const likes    = platform === 'x' ? 0 : scrapeCount(['reaction', 'like']);
+  const comments = platform === 'x' ? 0 : scrapeCount(['comment']);
+  const shares   = platform === 'x' ? 0 : scrapeCount(['repost', 'reshare']);
+  const postedAt = platform === 'x' ? new Date().toISOString().split('T')[0] : scrapePostedAt();
 
   const saveUrl = BASE + '/save.html'
     + '?c='  + encodeURIComponent(content)

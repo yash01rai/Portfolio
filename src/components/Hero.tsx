@@ -76,8 +76,8 @@ export default function Hero() {
         </p>
 
         <div className="blur-in flex flex-col sm:flex-row items-center gap-4">
-          <Button variant="solid">See Works</Button>
-          <Button variant="outline">Reach out...</Button>
+          <Button variant="solid" onClick={() => document.getElementById('experience')?.scrollIntoView({ behavior: 'smooth' })}>See Works</Button>
+          <Button variant="outline" onClick={() => window.location.href = 'mailto:yashhr01@gmail.com'}>Reach out...</Button>
         </div>
       </div>
 
