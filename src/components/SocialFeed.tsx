@@ -129,7 +129,7 @@ function LinkedInPostCard({
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true, margin: '-30px' }}
       transition={{ duration: 0.8, delay, ease: [0.25, 0.1, 0.25, 1] }}
-      className="group relative cursor-pointer overflow-hidden rounded-xl transition-shadow duration-300"
+      className={`group relative cursor-pointer rounded-xl transition-shadow duration-300 ${expanded ? 'overflow-visible' : 'overflow-hidden max-h-[520px] sm:max-h-none'}`}
       style={{
         background: '#1D2226',
         border: highlighted ? '1px solid rgba(10,102,194,0.35)' : '1px solid rgba(255,255,255,0.1)',
@@ -139,6 +139,11 @@ function LinkedInPostCard({
       }}
       onClick={() => window.open(post.url, '_blank', 'noopener,noreferrer')}
     >
+      {/* Mobile height-cap fade on small screens when not expanded */}
+      {!expanded && (
+        <div className="sm:hidden pointer-events-none absolute bottom-0 left-0 right-0 h-16 z-10"
+          style={{ background: 'linear-gradient(to bottom, transparent, #1D2226)' }} />
+      )}
       {/* LinkedIn blue top stripe */}
       <div
         className="absolute left-0 right-0 top-0 h-[2px]"
@@ -281,7 +286,7 @@ function PostCard({
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true, margin: '-30px' }}
       transition={{ duration: 0.8, delay, ease: [0.25, 0.1, 0.25, 1] }}
-      className="relative cursor-pointer overflow-hidden rounded-2xl bg-surface p-5 transition-opacity hover:opacity-80"
+      className="relative cursor-pointer overflow-hidden rounded-2xl bg-surface p-5 transition-opacity hover:opacity-80 max-h-[420px] sm:max-h-none"
       style={{
         border: `1px solid ${highlighted ? 'rgba(78, 133, 191, 0.2)' : 'var(--stroke)'}`,
         boxShadow: highlighted ? '0 0 40px rgba(78, 133, 191, 0.04), 0 0 0 0.5px rgba(78, 133, 191, 0.13)' : 'none',
@@ -367,7 +372,7 @@ function XFeed({ posts }: { posts: SocialFeedItem[] }) {
             transition={{ duration: 0.35 }}
           >
             {tweetId ? (
-              <div data-theme="dark">
+              <div data-theme="dark" className="overflow-hidden max-h-[480px] sm:max-h-none">
                 <Tweet id={tweetId} />
               </div>
             ) : <PostCard post={post} />}
@@ -400,7 +405,7 @@ function LinkedInFeed({
             <iframe
               src={post.src}
               title={post.title}
-              className="min-h-[420px] w-full rounded-xl bg-white"
+              className="min-h-[360px] sm:min-h-[420px] max-h-[520px] sm:max-h-[640px] w-full rounded-xl bg-white"
               allowFullScreen
             />
           </motion.div>
@@ -494,7 +499,7 @@ export default function SocialFeed() {
       <FloatingSocialIcons containerRef={sectionRef} />
       <div className="pointer-events-none absolute left-1/2 top-1/2 h-[600px] w-[600px] -translate-x-1/2 -translate-y-1/2 rounded-full bg-accent/5 blur-[120px]" />
 
-      <div className="relative z-10 mx-auto max-w-[900px] px-6">
+      <div className="relative z-10 mx-auto max-w-[900px] px-[5vw] sm:px-6">
         <SectionHeader
           eyebrow="Journal"
           heading="Recent"
@@ -564,7 +569,7 @@ export default function SocialFeed() {
                         transition={{ duration: 0.4 }}
                       >
                         {tweetId ? (
-                          <div data-theme="dark">
+                          <div data-theme="dark" className="overflow-hidden max-h-[480px] sm:max-h-none">
                             <Tweet id={tweetId} />
                           </div>
                         ) : (

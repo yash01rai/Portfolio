@@ -78,19 +78,19 @@ function ExperienceCard({ job, idx, isLast }: { job: typeof EXPERIENCE[0]; idx: 
   const [open, setOpen] = useState(idx === 0);
 
   return (
-    <motion.div 
+    <motion.div
       initial={{ opacity: 0, y: 50 }}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true, margin: "-50px" }}
       transition={{ duration: 0.9, delay: Math.min(idx * 0.1 + 0.1, 0.4), ease: [0.25, 0.1, 0.25, 1] }}
-      className="flex gap-6 relative"
+      className="flex gap-3 md:gap-6 relative"
     >
       {/* Timeline spine */}
-      <div className="flex flex-col items-center shrink-0 w-10 min-w-[40px]">
+      <div className="flex flex-col items-center shrink-0 w-8 min-w-[32px] md:w-10 md:min-w-[40px]">
         {/* Node */}
-        <div 
+        <div
           onClick={() => setOpen(!open)}
-          className="w-10 h-10 min-w-[40px] min-h-[40px] flex items-center justify-center shrink-0 cursor-pointer overflow-visible leading-none text-[15px] font-semibold font-display italic transition-all duration-300"
+          className="w-8 h-8 min-w-[32px] min-h-[32px] md:w-10 md:h-10 md:min-w-[40px] md:min-h-[40px] flex items-center justify-center shrink-0 cursor-pointer overflow-visible leading-none text-[13px] md:text-[15px] font-semibold font-display italic transition-all duration-300"
           style={{
             borderRadius: open ? "50%" : "0px",
             background: open ? `linear-gradient(135deg, ${job.color}33, ${job.color}11)` : "var(--surface)",
@@ -124,9 +124,8 @@ function ExperienceCard({ job, idx, isLast }: { job: typeof EXPERIENCE[0]; idx: 
           }}
         >
           {/* Card header (always visible) */}
-          <div 
-            className="flex items-start justify-between gap-3 transition-all duration-300"
-            style={{ padding: open ? "20px 24px 16px" : "0 0 8px" }}
+          <div
+            className={`flex flex-col md:flex-row md:items-start md:justify-between gap-1 md:gap-3 transition-all duration-300 ${open ? "px-4 md:px-6 pt-5 pb-4" : "pb-2"}`}
           >
             <div>
               <div className="flex items-center gap-2.5 mb-1">
@@ -142,8 +141,9 @@ function ExperienceCard({ job, idx, isLast }: { job: typeof EXPERIENCE[0]; idx: 
                 {job.role}
               </div>
             </div>
-            <div className="text-right shrink-0">
-              <div className="text-xs text-muted mb-0.5">{job.period}</div>
+            <div className="text-left md:text-right shrink-0 flex md:block items-center gap-2 md:gap-0">
+              <div className="text-xs text-muted md:mb-0.5">{job.period}</div>
+              <span className="text-[11px] text-muted opacity-60 md:hidden">·</span>
               <div className="text-[11px] text-muted opacity-60">{job.location}</div>
             </div>
           </div>
@@ -157,7 +157,7 @@ function ExperienceCard({ job, idx, isLast }: { job: typeof EXPERIENCE[0]; idx: 
                 exit={{ height: 0, opacity: 0 }}
                 transition={{ duration: 0.3, ease: "easeInOut" }}
               >
-                <div className="px-6 pb-6 pt-2">
+                <div className="px-4 md:px-6 pb-5 md:pb-6 pt-2">
                   <p className="text-xs text-muted mb-4 italic">{job.tagline}</p>
 
                   {/* Metrics chips */}
@@ -214,7 +214,7 @@ function ExperienceCard({ job, idx, isLast }: { job: typeof EXPERIENCE[0]; idx: 
 export default function Experience() {
   return (
     <section id="experience" className="bg-bg py-24 border-t border-white/5">
-      <div className="max-w-[900px] mx-auto px-6">
+      <div className="max-w-[900px] mx-auto px-4 md:px-6">
         <SectionHeader
           eyebrow="Career"
           heading="Where I've"
