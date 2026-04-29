@@ -35,36 +35,38 @@ export default function Explorations() {
 
   useLayoutEffect(() => {
     const ctx = gsap.context(() => {
-      // The card is CSS-sticky instead of GSAP-pinned, so it stays bounded by this
-      // section even when upstream sections change height before ScrollTrigger refreshes.
-      gsap.set(contentRef.current, { autoAlpha: 0 });
-      const setCardVisibility = (opacity: number) => {
-        gsap.set(contentRef.current, { autoAlpha: opacity });
-      };
+      // Pin the card for the full section scroll (start: top top → end: bottom top = 280vh)
+      ScrollTrigger.create({
+        trigger: containerRef.current,
+        pin: contentRef.current,
+        start: "top top",
+        end: "bottom bottom",
+        pinSpacing: false,
+        invalidateOnRefresh: true,
+      });
+
+      const opacitySetter = gsap.quickSetter(contentRef.current, "autoAlpha");
+      opacitySetter(0);
+
+      const setCardVisibility = (opacity: number) => opacitySetter(Math.max(0, Math.min(1, opacity)));
 
       ScrollTrigger.create({
         trigger: containerRef.current,
         start: "top top",
         end: "bottom bottom",
         invalidateOnRefresh: true,
-        // Force hard boundaries because onUpdate can miss exact p=0/1 on fast scroll.
         onLeave: () => setCardVisibility(0),
         onLeaveBack: () => setCardVisibility(0),
         onUpdate: (self) => {
           const p = self.progress;
-          const sectionH = containerRef.current?.offsetHeight ?? 0;
-          const vh = window.innerHeight;
-          const scrollDistance = Math.max(1, sectionH - vh);
-          const fadeInEnd = Math.min(0.35, (vh * 0.15) / scrollDistance);
-          const fadeOutStart = Math.max(fadeInEnd, 1 - (vh * 0.25) / scrollDistance);
-
+          // invisible 0→0.15, fade-in 0.15→0.22, hold 0.22→0.88, fade-out 0.88→0.94, invisible 0.94→1
           let opacity: number;
-          if (p <= 0) opacity = 0;
-          else if (p < fadeInEnd) opacity = p / fadeInEnd;
-          else if (p < fadeOutStart) opacity = 1;
-          else opacity = 1 - (p - fadeOutStart) / Math.max(0.001, 1 - fadeOutStart);
-
-          setCardVisibility(Math.max(0, Math.min(1, opacity)));
+          if (p <= 0.15) opacity = 0;
+          else if (p < 0.22) opacity = (p - 0.15) / 0.07;
+          else if (p < 0.88) opacity = 1;
+          else if (p < 0.94) opacity = 1 - (p - 0.88) / 0.06;
+          else opacity = 0;
+          setCardVisibility(opacity);
         },
       });
 
@@ -112,9 +114,9 @@ export default function Explorations() {
     <section ref={containerRef} className="relative isolate min-h-[280vh] bg-bg overflow-x-clip">
       
       {/* Section-bounded sticky center content */}
-      <div 
-        ref={contentRef} 
-        className="sticky top-0 h-screen w-full flex flex-col items-center justify-center pointer-events-none z-30"
+      <div
+        ref={contentRef}
+        className="h-screen w-full flex flex-col items-center justify-center pointer-events-none z-30"
       >
         <div className="text-center px-4 max-w-2xl mx-auto backdrop-blur-md bg-bg/60 p-8 rounded-3xl border border-white/5 pointer-events-auto">
           <div className="flex items-center justify-center gap-4 mb-6">
