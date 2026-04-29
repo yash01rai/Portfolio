@@ -118,18 +118,18 @@ export default function Explorations() {
         ref={contentRef}
         className="h-screen w-full flex flex-col items-center justify-center pointer-events-none z-30"
       >
-        <div className="text-center px-4 max-w-2xl mx-auto backdrop-blur-md bg-bg/60 p-8 rounded-3xl border border-white/5 pointer-events-auto">
-          <div className="flex items-center justify-center gap-4 mb-6">
+        <div className="text-center px-4 w-[85%] max-w-[571px] mx-auto backdrop-blur-md bg-bg/60 px-8 py-6 rounded-3xl border border-white/5 pointer-events-auto">
+          <div className="flex items-center justify-center gap-4 mb-5">
             <div className="w-8 h-px bg-stroke" />
             <span className="text-xs text-muted uppercase tracking-[0.3em]">Explorations</span>
             <div className="w-8 h-px bg-stroke" />
           </div>
-          
-          <h2 className="text-5xl md:text-7xl lg:text-8xl text-text-primary tracking-tight mb-6">
+
+          <h2 className="text-5xl md:text-7xl lg:text-8xl text-text-primary tracking-tight mb-5">
             Visual <span className="font-display italic">playground</span>
           </h2>
-          
-          <p className="text-muted text-sm md:text-base mb-8 max-w-md mx-auto">
+
+          <p className="text-muted text-sm md:text-base mb-7 max-w-md mx-auto">
             Interactive code experiments — canvas animations, physics simulations, and generative art, all built from scratch.
           </p>
 
@@ -157,7 +157,7 @@ export default function Explorations() {
             {ITEMS.slice(0, 3).map((item, idx) => (
               <div 
                 key={idx} 
-                className="group relative aspect-square w-full max-w-[320px] mx-auto rounded-3xl overflow-hidden border border-stroke/50 cursor-pointer transition-transform duration-500 hover:z-50 hover:scale-105"
+                className="group relative aspect-square w-[140px] sm:w-[200px] md:w-[256px] mx-auto rounded-3xl overflow-hidden border border-stroke/50 cursor-pointer transition-transform duration-500 hover:z-50 hover:scale-105"
                 style={{ transform: `rotate(${item.rotation}deg)` }}
               >
                 <item.component />
@@ -174,9 +174,9 @@ export default function Explorations() {
           {/* Column 2 */}
           <div ref={col2Ref} className="flex flex-col gap-32 md:gap-64 pt-[110vh] pb-[40vh] pointer-events-auto">
             {ITEMS.slice(3, 6).map((item, idx) => (
-              <div 
-                key={idx + 3} 
-                className="group relative aspect-square w-full max-w-[320px] mx-auto rounded-3xl overflow-hidden border border-stroke/50 cursor-pointer transition-transform duration-500 hover:z-50 hover:scale-105"
+              <div
+                key={idx + 3}
+                className="group relative aspect-square w-[140px] sm:w-[200px] md:w-[256px] mx-auto rounded-3xl overflow-hidden border border-stroke/50 cursor-pointer transition-transform duration-500 hover:z-50 hover:scale-105"
                 style={{ transform: `rotate(${item.rotation}deg)` }}
               >
                 <item.component />
