@@ -61,17 +61,23 @@ function platformMatches(item: SocialFeedItem, platform: Platform) {
   return item.platform === 'x';
 }
 
-
 function getProfileLink(platform: Platform) {
   if (platform === 'LinkedIn') {
     return { href: LINKEDIN_PROFILE_URL, label: 'View all posts on LinkedIn' };
   }
-
   if (platform === 'X / Twitter') {
     return { href: X_PROFILE_URL, label: 'Open profile on X' };
   }
-
   return { href: X_PROFILE_URL, label: 'View latest on X' };
+}
+
+function pickFeatured(posts: SocialFeedItem[], n: number): SocialFeedItem[] {
+  const pinned = posts.filter((p) => p.pinned);
+  const featured = posts.filter((p) => !p.pinned && p.featured);
+  const rest = posts
+    .filter((p) => !p.pinned && !p.featured)
+    .sort((a, b) => new Date(b.publishedAt).getTime() - new Date(a.publishedAt).getTime());
+  return [...pinned, ...featured, ...rest].slice(0, n);
 }
 
 function LinkedInAvatar({ className }: { className?: string }) {
@@ -129,7 +135,7 @@ function LinkedInPostCard({
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true, margin: '-30px' }}
       transition={{ duration: 0.8, delay, ease: [0.25, 0.1, 0.25, 1] }}
-      className={`group relative cursor-pointer rounded-xl transition-shadow duration-300 ${expanded ? 'overflow-visible' : 'overflow-hidden max-h-[520px] sm:max-h-none'}`}
+      className={`group relative cursor-pointer rounded-xl transition-shadow duration-300 ${expanded ? 'overflow-visible' : 'overflow-hidden max-h-[420px] sm:max-h-none'}`}
       style={{
         background: '#1D2226',
         border: highlighted ? '1px solid rgba(10,102,194,0.35)' : '1px solid rgba(255,255,255,0.1)',
@@ -139,18 +145,15 @@ function LinkedInPostCard({
       }}
       onClick={() => window.open(post.url, '_blank', 'noopener,noreferrer')}
     >
-      {/* Mobile height-cap fade on small screens when not expanded */}
       {!expanded && (
         <div className="sm:hidden pointer-events-none absolute bottom-0 left-0 right-0 h-16 z-10"
           style={{ background: 'linear-gradient(to bottom, transparent, #1D2226)' }} />
       )}
-      {/* LinkedIn blue top stripe */}
       <div
         className="absolute left-0 right-0 top-0 h-[2px]"
         style={{ background: highlighted ? 'linear-gradient(90deg, #0A66C2, #70B5F9, #0A66C2)' : '#0A66C2' }}
       />
 
-      {/* LinkedIn logo badge — absolute top-right */}
       <div className="absolute right-4 top-4">
         <svg viewBox="0 0 24 24" className="h-5 w-5" aria-label="LinkedIn">
           <rect width="24" height="24" rx="4" fill="#0A66C2" />
@@ -161,7 +164,6 @@ function LinkedInPostCard({
         </svg>
       </div>
 
-      {/* Header */}
       <div className="flex items-start gap-3 px-4 pb-3 pt-5">
         <div className="relative shrink-0">
           <LinkedInAvatar className="h-12 w-12 rounded-full ring-2 ring-[#0A66C2]/50" />
@@ -199,7 +201,6 @@ function LinkedInPostCard({
         </div>
       </div>
 
-      {/* Content */}
       <div className="px-4 pb-4">
         <p className="whitespace-pre-line text-[14px] leading-[1.65] text-white/90">
           {displayContent}
@@ -216,7 +217,6 @@ function LinkedInPostCard({
         )}
       </div>
 
-      {/* Reaction summary */}
       {(likes > 0 || reactionParts.length > 0) && (
         <div className="flex items-center justify-between px-4 py-2">
           {likes > 0 && (
@@ -241,10 +241,8 @@ function LinkedInPostCard({
         </div>
       )}
 
-      {/* Divider */}
       <div className="mx-4 border-t border-white/10" />
 
-      {/* Action bar */}
       <div className="flex pb-1">
         {LI_ACTIONS.map(({ label, icon: Icon }) => (
           <a
@@ -457,6 +455,29 @@ function LinkedInFeed({
   );
 }
 
+function MobileXCard({ post, delay = 0 }: { post: SocialFeedItem; delay?: number }) {
+  const tweetId = post.url ? extractTweetId(post.url) : null;
+  if (tweetId) {
+    return (
+      <motion.div
+        initial={{ opacity: 0, y: 30 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true, margin: '-30px' }}
+        transition={{ duration: 0.8, delay, ease: [0.25, 0.1, 0.25, 1] }}
+        data-theme="dark"
+        className="relative max-h-[420px] overflow-hidden rounded-2xl"
+      >
+        <Tweet id={tweetId} />
+        <div
+          className="pointer-events-none absolute bottom-0 left-0 right-0 h-16"
+          style={{ background: 'linear-gradient(to bottom, transparent, var(--bg))' }}
+        />
+      </motion.div>
+    );
+  }
+  return <PostCard post={post} delay={delay} />;
+}
+
 export default function SocialFeed() {
   const sectionRef = useRef<HTMLElement>(null);
   const [platform, setPlatform] = useState<Platform>('All');
@@ -466,6 +487,11 @@ export default function SocialFeed() {
   const FEED_LIMIT_TAB = 6;
   const FEED_LIMIT_ALL = 8;
 
+  // Mobile: always 2 from each platform, featured/pinned first
+  const mobileLiCards = useMemo(() => pickFeatured(linkedInPosts, 2), [linkedInPosts]);
+  const mobileXCards = useMemo(() => pickFeatured(xPosts, 2), [xPosts]);
+
+  // Desktop: original tab-based logic
   const highlightedPosts = useMemo(() => linkedInPosts.filter((post) => post.pinned), [linkedInPosts]);
   const displayPosts = useMemo(() => {
     const pool = platform === 'X / Twitter'
@@ -507,7 +533,8 @@ export default function SocialFeed() {
           sub="Thoughts on frontend architecture, AI-augmented development, and engineering craft."
         />
 
-        <div className="mb-10 flex items-center gap-2 overflow-x-auto pb-2 scrollbar-hide">
+        {/* Desktop: tab bar */}
+        <div className="mb-10 hidden sm:flex items-center gap-2 overflow-x-auto pb-2 scrollbar-hide">
           {PLATFORMS.map((tab) => (
             <button
               key={tab}
@@ -527,62 +554,85 @@ export default function SocialFeed() {
           </div>
         </div>
 
-        <AnimatePresence mode="wait">
-          {platform === 'X / Twitter' ? (
-            <XFeed key="x-feed" posts={displayPosts} />
-          ) : platform === 'LinkedIn' ? (
-            <LinkedInFeed key="linkedin-feed" highlightedPosts={[]} displayPosts={displayPosts} />
-          ) : (
-            <motion.div key={platform} initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
-              <AnimatePresence mode="wait">
-                {showHighlighted && (
-                  <motion.div
-                    key="highlighted"
-                    initial={{ opacity: 0, height: 0 }}
-                    animate={{ opacity: 1, height: 'auto' }}
-                    exit={{ opacity: 0, height: 0 }}
-                    className="mb-8"
-                  >
-                    <div className="mb-4 flex items-center gap-3">
-                      <div className="h-px flex-1 bg-gradient-to-r from-stroke to-transparent" />
-                      <span className="text-[10px] uppercase tracking-[0.3em] text-muted">Pinned</span>
-                      <div className="h-px flex-1 bg-gradient-to-l from-stroke to-transparent" />
-                    </div>
-                    {highlightedPosts.map((post) => (
-                      <PostCard key={post.id} post={post} highlighted />
-                    ))}
-                  </motion.div>
-                )}
-              </AnimatePresence>
+        {/* Mobile: status indicator only */}
+        <div className="mb-8 flex items-center justify-end sm:hidden">
+          <div className="flex items-center gap-1.5">
+            <span className="h-1.5 w-1.5 rounded-full bg-green-400 shadow-[0_0_8px_rgba(74,222,128,0.5)]" />
+            <span className="text-[11px] uppercase tracking-[0.1em] text-muted">{statusLabel}</span>
+          </div>
+        </div>
 
-              <div className="columns-1 gap-4 md:columns-2 [column-fill:_balance] [&_.react-tweet-theme]:!my-0">
-                <AnimatePresence>
-                  {displayPosts.map((post, index) => {
-                    const tweetId = post.platform === 'x' && post.url ? extractTweetId(post.url) : null;
-                    return (
-                      <motion.div
-                        key={`${platform}-${post.id}`}
-                        className="mb-4 break-inside-avoid"
-                        initial={{ opacity: 0, scale: 0.95 }}
-                        animate={{ opacity: 1, scale: 1 }}
-                        exit={{ opacity: 0, scale: 0.95 }}
-                        transition={{ duration: 0.4 }}
-                      >
-                        {tweetId ? (
-                          <div data-theme="dark" className="overflow-hidden max-h-[480px] sm:max-h-none">
-                            <Tweet id={tweetId} />
-                          </div>
-                        ) : (
-                          <PostCard post={post} delay={index * 0.05} />
-                        )}
-                      </motion.div>
-                    );
-                  })}
-                </AnimatePresence>
-              </div>
-            </motion.div>
+        {/* Mobile: fixed 4-card grid (2 LinkedIn + 2 X, featured first) */}
+        <div className="grid grid-cols-1 gap-4 sm:hidden [&_.react-tweet-theme]:!my-0">
+          {mobileLiCards[0] && (
+            <LinkedInPostCard post={mobileLiCards[0]} delay={0} highlighted={!!mobileLiCards[0].pinned} />
           )}
-        </AnimatePresence>
+          {mobileXCards[0] && <MobileXCard post={mobileXCards[0]} delay={0.05} />}
+          {mobileLiCards[1] && (
+            <LinkedInPostCard post={mobileLiCards[1]} delay={0.1} highlighted={!!mobileLiCards[1].pinned} />
+          )}
+          {mobileXCards[1] && <MobileXCard post={mobileXCards[1]} delay={0.15} />}
+        </div>
+
+        {/* Desktop: original tab-based feed */}
+        <div className="hidden sm:block">
+          <AnimatePresence mode="wait">
+            {platform === 'X / Twitter' ? (
+              <XFeed key="x-feed" posts={displayPosts} />
+            ) : platform === 'LinkedIn' ? (
+              <LinkedInFeed key="linkedin-feed" highlightedPosts={[]} displayPosts={displayPosts} />
+            ) : (
+              <motion.div key={platform} initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
+                <AnimatePresence mode="wait">
+                  {showHighlighted && (
+                    <motion.div
+                      key="highlighted"
+                      initial={{ opacity: 0, height: 0 }}
+                      animate={{ opacity: 1, height: 'auto' }}
+                      exit={{ opacity: 0, height: 0 }}
+                      className="mb-8"
+                    >
+                      <div className="mb-4 flex items-center gap-3">
+                        <div className="h-px flex-1 bg-gradient-to-r from-stroke to-transparent" />
+                        <span className="text-[10px] uppercase tracking-[0.3em] text-muted">Pinned</span>
+                        <div className="h-px flex-1 bg-gradient-to-l from-stroke to-transparent" />
+                      </div>
+                      {highlightedPosts.map((post) => (
+                        <PostCard key={post.id} post={post} highlighted />
+                      ))}
+                    </motion.div>
+                  )}
+                </AnimatePresence>
+
+                <div className="columns-1 gap-4 md:columns-2 [column-fill:_balance] [&_.react-tweet-theme]:!my-0">
+                  <AnimatePresence>
+                    {displayPosts.map((post, index) => {
+                      const tweetId = post.platform === 'x' && post.url ? extractTweetId(post.url) : null;
+                      return (
+                        <motion.div
+                          key={`${platform}-${post.id}`}
+                          className="mb-4 break-inside-avoid"
+                          initial={{ opacity: 0, scale: 0.95 }}
+                          animate={{ opacity: 1, scale: 1 }}
+                          exit={{ opacity: 0, scale: 0.95 }}
+                          transition={{ duration: 0.4 }}
+                        >
+                          {tweetId ? (
+                            <div data-theme="dark" className="overflow-hidden max-h-[480px] sm:max-h-none">
+                              <Tweet id={tweetId} />
+                            </div>
+                          ) : (
+                            <PostCard post={post} delay={index * 0.05} />
+                          )}
+                        </motion.div>
+                      );
+                    })}
+                  </AnimatePresence>
+                </div>
+              </motion.div>
+            )}
+          </AnimatePresence>
+        </div>
 
         <motion.div initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} viewport={{ once: true }} className="mt-10 flex flex-wrap items-center justify-center gap-3">
           <AnimatePresence mode="wait">
@@ -595,7 +645,6 @@ export default function SocialFeed() {
                 transition={{ duration: 0.25 }}
                 className="flex flex-wrap items-center justify-center gap-3"
               >
-                {/* LinkedIn */}
                 <a
                   href={LINKEDIN_PROFILE_URL}
                   target="_blank"
@@ -613,7 +662,6 @@ export default function SocialFeed() {
                   </span>
                 </a>
 
-                {/* X / Twitter */}
                 <a
                   href={X_PROFILE_URL}
                   target="_blank"
