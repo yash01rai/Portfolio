@@ -3,7 +3,7 @@ import { useEffect, useState } from 'react';
 import { ArrowUpRight } from 'lucide-react';
 import { cn } from '../lib/utils';
 
-const NAV_LINKS = ["Home", "Experience", "Work", "Resume"];
+const NAV_LINKS = ["Home", "Experience", "Work", "Profile"];
 
 export default function Navbar() {
   const [scrolled, setScrolled] = useState(false);

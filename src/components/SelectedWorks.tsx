@@ -20,8 +20,9 @@ const PROJECTS = [
     spanClass: "md:col-span-5 aspect-[4/3] md:aspect-[4/5]",
   },
   {
-    title: "Platform Integration",
-    image: "https://images.unsplash.com/photo-1551288049-bebda4e38f71?q=80&w=800&auto=format&fit=crop",
+    title: "React UI and Components",
+    image: "/yashportfolio.png",
+    link: "https://yashdevportfolio.netlify.app/",
     spanClass: "md:col-span-7 aspect-[4/3] md:aspect-[16/9]",
   }
 ];
