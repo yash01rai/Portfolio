@@ -35,7 +35,8 @@ export default function Explorations() {
 
   useLayoutEffect(() => {
     const ctx = gsap.context(() => {
-      // Pin the card for the full section scroll (start: top top → end: bottom top = 280vh)
+      // Pin the card while the section owns the viewport (top top → bottom bottom = 180vh of a 280vh section).
+      // Releasing at bottom-bottom ensures the next section (Stats) doesn't overlap the pinned card.
       ScrollTrigger.create({
         trigger: containerRef.current,
         pin: contentRef.current,
