@@ -1,4 +1,4 @@
-import { useMemo, useRef, useState } from 'react';
+import { Component, type ReactNode, useMemo, useRef, useState } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
 import { ExternalLink, Globe2, Heart, MessageCircle, MessageSquare, Repeat2, Send, ThumbsUp } from 'lucide-react';
 import { Tweet } from 'react-tweet';
@@ -16,6 +16,19 @@ import { FloatingSocialIcons } from './social/FloatingSocialIcons';
 
 const PLATFORMS = ['All', 'LinkedIn', 'X / Twitter'] as const;
 type Platform = (typeof PLATFORMS)[number];
+
+// react-tweet's enrichTweet() throws ("entities is not iterable") on tweets whose
+// syndication payload omits empty entity arrays. That render error would otherwise
+// unmount the whole app (blank page) — fall back to a plain card instead.
+class TweetBoundary extends Component<{ fallback: ReactNode; children: ReactNode }, { hasError: boolean }> {
+  state = { hasError: false };
+  static getDerivedStateFromError() {
+    return { hasError: true };
+  }
+  render() {
+    return this.state.hasError ? this.props.fallback : this.props.children;
+  }
+}
 
 function extractTweetId(url: string): string | null {
   const m = url.match(/(?:x\.com|twitter\.com)\/[^/]+\/status\/(\d+)/);
@@ -370,9 +383,11 @@ function XFeed({ posts }: { posts: SocialFeedItem[] }) {
             transition={{ duration: 0.35 }}
           >
             {tweetId ? (
-              <div data-theme="dark" className="overflow-hidden max-h-[480px] sm:max-h-none">
-                <Tweet id={tweetId} />
-              </div>
+              <TweetBoundary fallback={<PostCard post={post} />}>
+                <div data-theme="dark" className="overflow-hidden max-h-[480px] sm:max-h-none">
+                  <Tweet id={tweetId} />
+                </div>
+              </TweetBoundary>
             ) : <PostCard post={post} />}
           </motion.div>
         );
@@ -459,20 +474,22 @@ function MobileXCard({ post, delay = 0 }: { post: SocialFeedItem; delay?: number
   const tweetId = post.url ? extractTweetId(post.url) : null;
   if (tweetId) {
     return (
-      <motion.div
-        initial={{ opacity: 0, y: 30 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        viewport={{ once: true, margin: '-30px' }}
-        transition={{ duration: 0.8, delay, ease: [0.25, 0.1, 0.25, 1] }}
-        data-theme="dark"
-        className="relative max-h-[420px] overflow-hidden rounded-2xl"
-      >
-        <Tweet id={tweetId} />
-        <div
-          className="pointer-events-none absolute bottom-0 left-0 right-0 h-16"
-          style={{ background: 'linear-gradient(to bottom, transparent, var(--bg))' }}
-        />
-      </motion.div>
+      <TweetBoundary fallback={<PostCard post={post} delay={delay} />}>
+        <motion.div
+          initial={{ opacity: 0, y: 30 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: '-30px' }}
+          transition={{ duration: 0.8, delay, ease: [0.25, 0.1, 0.25, 1] }}
+          data-theme="dark"
+          className="relative max-h-[420px] overflow-hidden rounded-2xl"
+        >
+          <Tweet id={tweetId} />
+          <div
+            className="pointer-events-none absolute bottom-0 left-0 right-0 h-16"
+            style={{ background: 'linear-gradient(to bottom, transparent, var(--bg))' }}
+          />
+        </motion.div>
+      </TweetBoundary>
     );
   }
   return <PostCard post={post} delay={delay} />;
@@ -618,9 +635,11 @@ export default function SocialFeed() {
                           transition={{ duration: 0.4 }}
                         >
                           {tweetId ? (
-                            <div data-theme="dark" className="overflow-hidden max-h-[480px] sm:max-h-none">
-                              <Tweet id={tweetId} />
-                            </div>
+                            <TweetBoundary fallback={<PostCard post={post} delay={index * 0.05} />}>
+                              <div data-theme="dark" className="overflow-hidden max-h-[480px] sm:max-h-none">
+                                <Tweet id={tweetId} />
+                              </div>
+                            </TweetBoundary>
                           ) : (
                             <PostCard post={post} delay={index * 0.05} />
                           )}
