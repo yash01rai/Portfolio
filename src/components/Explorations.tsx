@@ -46,7 +46,13 @@ export default function Explorations() {
         invalidateOnRefresh: true,
       });
 
-      const opacitySetter = gsap.quickSetter(contentRef.current, "autoAlpha");
+      // NOTE: use "opacity", not "autoAlpha". autoAlpha aliases to the literal
+      // string "opacity,visibility", which quickSetter (unlike gsap.to/gsap.set)
+      // can't split — it sets a single DOM property named "opacity,visibility".
+      // Chrome ignores the invalid name; WebKit throws InvalidCharacterError and
+      // blanks the whole page on Safari/iOS. The card is pointer-events-none, so
+      // plain opacity is functionally equivalent.
+      const opacitySetter = gsap.quickSetter(contentRef.current, "opacity");
       opacitySetter(0);
 
       const setCardVisibility = (opacity: number) => opacitySetter(Math.max(0, Math.min(1, opacity)));

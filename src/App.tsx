@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import ErrorBoundary from './components/ErrorBoundary';
 import LoadingScreen from './components/LoadingScreen';
 import Navbar from './components/Navbar';
 import Hero from './components/Hero';
@@ -14,25 +15,27 @@ function App() {
   const [isLoading, setIsLoading] = useState(true);
 
   return (
-    <div className="relative bg-bg min-h-screen text-text-primary overflow-x-clip">
-      {isLoading ? (
-        <LoadingScreen onComplete={() => setIsLoading(false)} />
-      ) : (
-        <>
-          <Navbar />
-          <main>
-            <Hero />
-            <SocialFeed />
-            <Experience />
-            <SelectedWorks />
-            <Explorations />
-            <Stats />
-            <Resume />
-          </main>
-          <Footer />
-        </>
-      )}
-    </div>
+    <ErrorBoundary>
+      <div className="relative bg-bg min-h-screen text-text-primary overflow-x-clip">
+        {isLoading ? (
+          <LoadingScreen onComplete={() => setIsLoading(false)} />
+        ) : (
+          <>
+            <Navbar />
+            <main>
+              <Hero />
+              <SocialFeed />
+              <Experience />
+              <SelectedWorks />
+              <Explorations />
+              <Stats />
+              <Resume />
+            </main>
+            <Footer />
+          </>
+        )}
+      </div>
+    </ErrorBoundary>
   );
 }
 
