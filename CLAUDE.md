@@ -7,6 +7,34 @@
 - Framer Motion for simple `whileInView` transitions (non-scroll-pinned sections)
 - Lucide React for icons
 
+## Deployment — MANUAL
+
+**This Vercel project is NOT connected to GitHub. Pushing to `main` deploys nothing.**
+
+Production (yashrai.in) is published only by running:
+
+```bash
+npx vercel --prod --yes
+```
+
+Commit and push for version control as usual, but that alone never updates the
+live site. Every deployment in this project's history was made with the CLI.
+
+To verify a deploy actually landed, compare the live `etag` (which is the file's
+MD5) against the local file:
+
+```bash
+curl -sI https://yashrai.in/<file> | grep -i 'etag\|content-length'
+md5 <local-file>
+```
+
+Never report a change as live based on a successful `git push`.
+
+### Static assets
+Only files under `public/` are copied into `dist/`. A file elsewhere in the repo
+— including the repo root — is never served, no matter what it's named. The
+resume ships as `public/YashRai_Resume.pdf` (→ `yashrai.in/YashRai_Resume.pdf`).
+
 ## Project Structure
 ```
 src/
