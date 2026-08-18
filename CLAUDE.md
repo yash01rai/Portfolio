@@ -7,28 +7,36 @@
 - Framer Motion for simple `whileInView` transitions (non-scroll-pinned sections)
 - Lucide React for icons
 
-## Deployment — MANUAL
+## Deployment — AUTOMATIC (Git-connected)
 
-**This Vercel project is NOT connected to GitHub. Pushing to `main` deploys nothing.**
+**This Vercel project IS connected to GitHub (as of 18 Aug 2026).** Pushing to
+`main` triggers a production deploy to yashrai.in; opening a PR gets a preview
+URL. Nothing manual is required.
 
-Production (yashrai.in) is published only by running:
+`npx vercel --prod --yes` still works and is the fallback if the integration is
+ever disconnected, but it is no longer the normal path.
+
+Env vars (`NOTION_TOKEN`, `NOTION_DATABASE_ID`, `INGEST_SECRET`) live in Vercel
+project settings and are injected into git-triggered builds automatically.
+
+Deploys take ~20s. A push does not mean the change is live yet — confirm the
+build finished before claiming it landed:
 
 ```bash
-npx vercel --prod --yes
+npx vercel ls portfolio   # top row should read ● Ready, not ● Building
 ```
 
-Commit and push for version control as usual, but that alone never updates the
-live site. Every deployment in this project's history was made with the CLI.
-
-To verify a deploy actually landed, compare the live `etag` (which is the file's
-MD5) against the local file:
+Then verify the bytes by comparing the live `etag` (which is the file's MD5)
+against the local file:
 
 ```bash
 curl -sI https://yashrai.in/<file> | grep -i 'etag\|content-length'
-md5 <local-file>
+md5 -q <local-file>
 ```
 
-Never report a change as live based on a successful `git push`.
+Note this only works for files copied verbatim out of `public/`. Vite rewrites
+`index.html` and hashes JS/CSS at build time, so for those grep the live HTML
+for the expected content instead of comparing hashes.
 
 ### Static assets
 Only files under `public/` are copied into `dist/`. A file elsewhere in the repo
