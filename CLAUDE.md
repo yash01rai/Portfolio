@@ -41,7 +41,10 @@ for the expected content instead of comparing hashes.
 ### Static assets
 Only files under `public/` are copied into `dist/`. A file elsewhere in the repo
 — including the repo root — is never served, no matter what it's named. The
-resume ships as `public/YashRai_Resume.pdf` (→ `yashrai.in/YashRai_Resume.pdf`).
+resume ships as `public/yash_rai_resume.pdf` (→ `yashrai.in/yash_rai_resume.pdf`).
+The old capitalised URL `yashrai.in/YashRai_Resume.pdf` is still live — it is a
+rewrite in `vercel.json` pointing at the same file, so people holding the old
+link keep working. There is only ONE physical PDF; never re-add a second copy.
 
 ## Project Structure
 ```
