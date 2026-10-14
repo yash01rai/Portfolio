@@ -1,4 +1,5 @@
 import { useLayoutEffect, useRef, type ComponentType } from 'react';
+import { useInView } from '../hooks/useInView';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { ArrowUpRight } from 'lucide-react';
@@ -167,7 +168,7 @@ export default function Explorations() {
                 className="group relative aspect-square w-[140px] sm:w-[200px] md:w-[256px] mx-auto rounded-3xl overflow-hidden border border-stroke/50 cursor-pointer transition-transform duration-500 hover:z-50 hover:scale-105"
                 style={{ transform: `rotate(${item.rotation}deg)` }}
               >
-                <item.component />
+                <LiveExperiment component={item.component} />
                 {/* Hover label overlay */}
                 <div className="absolute inset-0 bg-bg/50 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end justify-center backdrop-blur-[2px] pointer-events-none">
                   <div className="mb-6 px-4 py-2 bg-white/10 backdrop-blur-md rounded-full border border-white/10">
@@ -186,7 +187,7 @@ export default function Explorations() {
                 className="group relative aspect-square w-[140px] sm:w-[200px] md:w-[256px] mx-auto rounded-3xl overflow-hidden border border-stroke/50 cursor-pointer transition-transform duration-500 hover:z-50 hover:scale-105"
                 style={{ transform: `rotate(${item.rotation}deg)` }}
               >
-                <item.component />
+                <LiveExperiment component={item.component} />
                 {/* Hover label overlay */}
                 <div className="absolute inset-0 bg-bg/50 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end justify-center backdrop-blur-[2px] pointer-events-none">
                   <div className="mb-6 px-4 py-2 bg-white/10 backdrop-blur-md rounded-full border border-white/10">
@@ -201,5 +202,17 @@ export default function Explorations() {
       </div>
 
     </section>
+  );
+}
+
+// Each experiment runs its own requestAnimationFrame loop. Mount it only while
+// its card is near the viewport so the six loops don't run for the whole visit.
+function LiveExperiment({ component: Experiment }: { component: ComponentType }) {
+  const ref = useRef<HTMLDivElement>(null);
+  const inView = useInView(ref, '200px');
+  return (
+    <div ref={ref} className="absolute inset-0">
+      {inView && <Experiment />}
+    </div>
   );
 }

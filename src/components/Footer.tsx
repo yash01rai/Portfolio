@@ -20,6 +20,13 @@ export default function Footer() {
         duration: 20,
         ease: "none",
         repeat: -1,
+        // Only animate while the marquee is on screen.
+        scrollTrigger: {
+          trigger: marqueeRef.current,
+          start: "top bottom",
+          end: "bottom top",
+          toggleActions: "play pause resume pause",
+        },
       });
     }, marqueeRef);
 
@@ -54,6 +61,7 @@ export default function Footer() {
       <div className="absolute inset-0 z-0 scale-y-[-1]">
         <HlsVideo
           src={HLS_URL}
+          lazy
           className="absolute top-1/2 left-1/2 min-w-full min-h-full -translate-x-1/2 -translate-y-1/2 opacity-50"
         />
         <div className="absolute inset-0 bg-black/60" />

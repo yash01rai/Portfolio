@@ -55,7 +55,8 @@ export default function GravityDots() {
 
     canvas.addEventListener('mousemove', handleMove);
     canvas.addEventListener('mouseleave', handleLeave);
-    window.addEventListener('resize', () => { resize(); initDots(); });
+    const handleResize = () => { resize(); initDots(); };
+    window.addEventListener('resize', handleResize);
 
     const gravity = 0.15;
     const bounce = 0.7;
@@ -148,6 +149,7 @@ export default function GravityDots() {
 
     return () => {
       cancelAnimationFrame(rafRef.current);
+      window.removeEventListener('resize', handleResize);
       canvas.removeEventListener('mousemove', handleMove);
       canvas.removeEventListener('mouseleave', handleLeave);
     };

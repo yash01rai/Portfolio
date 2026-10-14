@@ -55,7 +55,8 @@ export default function FluidGradient() {
 
     canvas.addEventListener('mousemove', handleMove);
     canvas.addEventListener('mouseleave', handleLeave);
-    window.addEventListener('resize', () => { resize(); initBlobs(); });
+    const handleResize = () => { resize(); initBlobs(); };
+    window.addEventListener('resize', handleResize);
 
     const draw = () => {
       const rect = canvas.parentElement!.getBoundingClientRect();
@@ -117,6 +118,7 @@ export default function FluidGradient() {
 
     return () => {
       cancelAnimationFrame(rafRef.current);
+      window.removeEventListener('resize', handleResize);
       canvas.removeEventListener('mousemove', handleMove);
       canvas.removeEventListener('mouseleave', handleLeave);
     };

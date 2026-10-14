@@ -52,7 +52,8 @@ export default function ParticleConstellation() {
 
     canvas.addEventListener('mousemove', handleMove);
     canvas.addEventListener('mouseleave', handleLeave);
-    window.addEventListener('resize', () => { resize(); initParticles(); });
+    const handleResize = () => { resize(); initParticles(); };
+    window.addEventListener('resize', handleResize);
 
     const draw = () => {
       const rect = canvas.parentElement!.getBoundingClientRect();
@@ -118,6 +119,7 @@ export default function ParticleConstellation() {
 
     return () => {
       cancelAnimationFrame(rafRef.current);
+      window.removeEventListener('resize', handleResize);
       canvas.removeEventListener('mousemove', handleMove);
       canvas.removeEventListener('mouseleave', handleLeave);
     };

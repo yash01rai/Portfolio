@@ -44,6 +44,8 @@ export default function Hero() {
       <div className="absolute inset-0 z-0">
         <HlsVideo 
           src={HLS_URL}
+          poster="/hero-poster.webp"
+          deferUntilIdle
           className="absolute top-1/2 left-1/2 min-w-full min-h-full -translate-x-1/2 -translate-y-1/2 opacity-70"
         />
         <div className="absolute inset-0 bg-black/20" />
