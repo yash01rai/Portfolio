@@ -4,11 +4,13 @@
     <meta charset="UTF-8" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Yash Rai - Portfolio</title>
-    <meta name="description" content="Yash Rai — Frontend/Fullstack Engineer based in Bengaluru. Designing seamless digital interactions by focusing on the unique nuances which bring systems to life." />
+    <title>Yash Rai — Frontend &amp; Fullstack Engineer in Bengaluru</title>
+    <meta name="description" content="Yash Rai is a Frontend &amp; Fullstack Engineer in Bengaluru with 5+ years building fast, scalable web apps in React, TypeScript and Node.js, plus interactive 3D for the web." />
+    <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1" />
     <meta name="author" content="Yash Rai" />
     <meta name="theme-color" content="#0a0a0a" />
     <link rel="canonical" href="https://yashrai.in/" />
+    <link rel="sitemap" type="application/xml" href="/sitemap.xml" />
 
     <!-- Open Graph / Facebook / LinkedIn -->
     <meta property="og:type" content="website" />
@@ -31,13 +33,182 @@
     <meta name="twitter:description" content="Designing seamless digital interactions by focusing on the unique nuances which bring systems to life." />
     <meta name="twitter:image" content="https://yashrai.in/og-hero.jpg" />
     <meta name="twitter:image:alt" content="Yash Rai — Frontend/Fullstack Engineer" />
+    <meta name="twitter:creator" content="@herecomeyashrai" />
+
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@graph": [
+        {
+          "@type": "WebSite",
+          "@id": "https://yashrai.in/#website",
+          "url": "https://yashrai.in/",
+          "name": "Yash Rai",
+          "inLanguage": "en",
+          "publisher": {
+            "@id": "https://yashrai.in/#person"
+          }
+        },
+        {
+          "@type": "ProfilePage",
+          "@id": "https://yashrai.in/#profile",
+          "url": "https://yashrai.in/",
+          "name": "Yash Rai — Frontend & Fullstack Engineer in Bengaluru",
+          "isPartOf": {
+            "@id": "https://yashrai.in/#website"
+          },
+          "mainEntity": {
+            "@id": "https://yashrai.in/#person"
+          },
+          "inLanguage": "en"
+        },
+        {
+          "@type": "Person",
+          "@id": "https://yashrai.in/#person",
+          "name": "Yash Rai",
+          "url": "https://yashrai.in/",
+          "image": "https://yashrai.in/avatar.jpg",
+          "jobTitle": "Frontend & Fullstack Engineer",
+          "email": "mailto:yashhr01@gmail.com",
+          "worksFor": {
+            "@type": "Organization",
+            "name": "Livspace",
+            "url": "https://www.livspace.com/"
+          },
+          "address": {
+            "@type": "PostalAddress",
+            "addressLocality": "Bengaluru",
+            "addressRegion": "Karnataka",
+            "addressCountry": "IN"
+          },
+          "alumniOf": {
+            "@type": "CollegeOrUniversity",
+            "name": "Rajiv Gandhi Proudyogiki Vishwavidyalaya"
+          },
+          "knowsAbout": [
+            "React",
+            "TypeScript",
+            "Next.js",
+            "Node.js",
+            "Micro Frontends",
+            "Module Federation",
+            "Web Performance",
+            "Design Systems",
+            "Three.js",
+            "WebGL",
+            "3D visualisation"
+          ],
+          "sameAs": [
+            "https://www.linkedin.com/in/paintedincodebyyashrai/",
+            "https://github.com/yash01rai",
+            "https://x.com/herecomeyashrai"
+          ]
+        },
+        {
+          "@type": "ItemList",
+          "@id": "https://yashrai.in/#projects",
+          "name": "Featured projects",
+          "itemListElement": [
+            {
+              "@type": "ListItem",
+              "position": 1,
+              "item": {
+                "@type": "CreativeWork",
+                "name": "3D Showroom Walkthrough",
+                "url": "https://yashrai.in/3d/demo_one/",
+                "image": "https://yashrai.in/projects/3d-showroom.webp",
+                "description": "Interactive 3D walkthrough of a four-level commercial showroom and family home, modelled from the architect's drawings and explorable in the browser.",
+                "keywords": "Three.js, WebGL, glTF, Blender, Python",
+                "creator": {
+                  "@id": "https://yashrai.in/#person"
+                }
+              }
+            },
+            {
+              "@type": "ListItem",
+              "position": 2,
+              "item": {
+                "@type": "CreativeWork",
+                "name": "Promptu",
+                "url": "https://chromewebstore.google.com/detail/promptu/gaafidhicjnpkdpcacfgehiafmliajah",
+                "image": "https://yashrai.in/projects/promptu.webp",
+                "description": "Chrome extension that rewrites any AI prompt into three polished versions in one click.",
+                "keywords": "Chrome Extension, JavaScript, Gemini API, Cloudflare Workers",
+                "creator": {
+                  "@id": "https://yashrai.in/#person"
+                }
+              }
+            },
+            {
+              "@type": "ListItem",
+              "position": 3,
+              "item": {
+                "@type": "CreativeWork",
+                "name": "Tour With Yash",
+                "url": "https://tourwithyash.onrender.com/",
+                "image": "https://yashrai.in/projects/tourwithyash.webp",
+                "description": "Full-stack tour booking site with login, bookings, reviews and card payments.",
+                "keywords": "Node.js, Express, MongoDB",
+                "creator": {
+                  "@id": "https://yashrai.in/#person"
+                }
+              }
+            }
+          ]
+        }
+      ]
+    }
+    </script>
+
+    <!-- Hide the static fallback inside #root as soon as JS is known to run; React replaces it on mount. -->
+    <script>document.documentElement.classList.add('js')</script>
+    <style>.js #seo-static{display:none}</style>
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
   </head>
   <body>
-    <div id="root"></div>
+    <div id="root">
+      <!--
+        Static copy of the page's main content for crawlers and link unfurlers that
+        don't run JavaScript. Hidden for JS visitors (see the .js rule in <head>) and
+        replaced by React on mount. Keep in sync with src/data/projects.ts.
+      -->
+      <div id="seo-static">
+        <header>
+          <h1>Yash Rai</h1>
+          <p>Frontend &amp; Fullstack Engineer in Bengaluru. 5+ years building high-performance web applications with React, TypeScript, Next.js and Node.js, plus interactive 3D for the web.</p>
+          <nav aria-label="Sections">
+            <a href="#experience">Experience</a> · <a href="#work">Work</a> · <a href="#profile">Profile</a> · <a href="/yash_rai_resume.pdf">Resume (PDF)</a>
+          </nav>
+        </header>
+        <main>
+          <section>
+            <h2>Experience</h2>
+            <ul>
+              <li><strong>Software Development Engineer 2, Livspace</strong> (2025 – present, Bengaluru): micro-frontend platform work with Webpack Module Federation, re-architected core UI modules, AI-assisted delivery.</li>
+              <li><strong>Software Engineer, Aionos (IndiGo)</strong> (2024 – 2025, Hyderabad): type-safe React + TypeScript component libraries and LLM-driven automation.</li>
+              <li><strong>Software Developer, Skillgigs</strong> (2021 – 2023, Delhi): marketplace features, OAuth 2.0, real-time chat, Node.js performance and CI/CD.</li>
+              <li><strong>Software Developer, Wipro</strong> (2019, Delhi).</li>
+            </ul>
+          </section>
+          <section>
+            <h2>Featured projects</h2>
+            <ul>
+              <li><a href="https://yashrai.in/3d/demo_one/">3D Showroom Walkthrough</a>: an interactive 3D walkthrough of a four-level commercial showroom and family home, modelled from the architect's drawings. Three.js, WebGL, glTF, Blender, Python.</li>
+              <li><a href="https://chromewebstore.google.com/detail/promptu/gaafidhicjnpkdpcacfgehiafmliajah">Promptu</a>: a Chrome extension that rewrites any AI prompt into three polished versions in one click. Gemini API, Cloudflare Workers.</li>
+              <li><a href="https://tourwithyash.onrender.com/">Tour With Yash</a>: a full-stack tour booking site. Node.js, Express, MongoDB.</li>
+              <li>Skillgigs Marketplace: OAuth 2.0 sign-in, WebSocket chat and Node.js API work. React, Node.js, Socket.io.</li>
+              <li><a href="https://yashdevportfolio.netlify.app/">React UI and Components</a>: an earlier React component portfolio.</li>
+            </ul>
+          </section>
+        </main>
+        <footer>
+          <p>Contact: <a href="mailto:yashhr01@gmail.com">yashhr01@gmail.com</a> · <a href="https://www.linkedin.com/in/paintedincodebyyashrai/">LinkedIn</a> · <a href="https://github.com/yash01rai">GitHub</a> · <a href="https://x.com/herecomeyashrai">X</a></p>
+        </footer>
+      </div>
+    </div>
     <script type="module" src="/src/main.tsx"></script>
   </body>
 </html>

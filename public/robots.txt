@@ -1,0 +1,6 @@
+User-agent: *
+Allow: /
+Disallow: /api/
+Disallow: /save.html
+
+Sitemap: https://yashrai.in/sitemap.xml
