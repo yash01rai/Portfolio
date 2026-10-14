@@ -6,7 +6,12 @@ import { Button } from './ui/Button';
 const ROLES = ["Frontend Engineer", "UI Architect", "React Developer", "Innovator"];
 const HLS_URL = "https://stream.mux.com/Aa02T7oM1wH5Mk5EEVDYhbZ1ChcdhRsS2m1NYyx4Ua1g.m3u8";
 
-export default function Hero() {
+interface HeroProps {
+  /** False while the loading screen is still covering the hero; the entrance plays once it's true. */
+  ready?: boolean;
+}
+
+export default function Hero({ ready = true }: HeroProps) {
   const [roleIndex, setRoleIndex] = useState(0);
   const containerRef = useRef<HTMLDivElement>(null);
 
@@ -19,6 +24,13 @@ export default function Hero() {
 
   useEffect(() => {
     const ctx = gsap.context(() => {
+      if (!ready) {
+        // Hold the entrance's start state while the loader is on top.
+        gsap.set(".name-reveal", { opacity: 0, y: 50 });
+        gsap.set(".blur-in", { opacity: 0, y: 20 });
+        return;
+      }
+
       const tl = gsap.timeline({ defaults: { ease: "power3.out" } });
 
       tl.fromTo(
@@ -36,7 +48,7 @@ export default function Hero() {
     }, containerRef);
 
     return () => ctx.revert();
-  }, []);
+  }, [ready]);
 
   return (
     <section id="home" ref={containerRef} className="relative min-h-screen w-full flex flex-col items-center justify-center overflow-hidden">

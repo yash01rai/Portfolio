@@ -1,8 +1,10 @@
 import { useEffect, useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 
+// The site renders underneath this overlay, so keep it short: long enough for
+// the three words to play, not so long that it hides a ready page.
 const WORDS = ["Design", "Create", "Inspire"];
-const DURATION_MS = 2700;
+const DURATION_MS = 1200;
 
 interface LoadingScreenProps {
   onComplete: () => void;
@@ -26,7 +28,7 @@ export default function LoadingScreen({ onComplete }: LoadingScreenProps) {
       if (progress < DURATION_MS) {
         animationFrameId = requestAnimationFrame(updateCounter);
       } else {
-        setTimeout(onComplete, 400);
+        setTimeout(onComplete, 150);
       }
     };
 
@@ -37,14 +39,19 @@ export default function LoadingScreen({ onComplete }: LoadingScreenProps) {
 
   useEffect(() => {
     const intervalId = setInterval(() => {
-      setWordIndex((prev) => (prev + 1) % WORDS.length);
-    }, 900); // 2700 / 3 words = 900ms per word
+      // Stop on the last word rather than wrapping back while the overlay fades out.
+      setWordIndex((prev) => Math.min(prev + 1, WORDS.length - 1));
+    }, DURATION_MS / WORDS.length);
 
     return () => clearInterval(intervalId);
   }, []);
 
   return (
-    <div className="fixed inset-0 z-[9999] bg-bg flex flex-col justify-between p-6 md:p-10 lg:p-16">
+    <motion.div
+      exit={{ opacity: 0 }}
+      transition={{ duration: 0.5, ease: "easeInOut" }}
+      className="fixed inset-0 z-[9999] bg-bg flex flex-col justify-between p-6 md:p-10 lg:p-16"
+    >
       {/* Top Left Label */}
       <motion.div
         initial={{ y: -20, opacity: 0 }}
@@ -63,7 +70,7 @@ export default function LoadingScreen({ onComplete }: LoadingScreenProps) {
             initial={{ y: 20, opacity: 0 }}
             animate={{ y: 0, opacity: 1 }}
             exit={{ y: -20, opacity: 0 }}
-            transition={{ duration: 0.4, ease: "easeInOut" }}
+            transition={{ duration: 0.18, ease: "easeInOut" }}
             className="text-4xl md:text-6xl lg:text-7xl font-display italic text-text-primary/80"
           >
             {WORDS[wordIndex]}
@@ -89,6 +96,6 @@ export default function LoadingScreen({ onComplete }: LoadingScreenProps) {
           }}
         />
       </div>
-    </div>
+    </motion.div>
   );
 }
