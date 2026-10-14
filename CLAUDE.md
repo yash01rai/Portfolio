@@ -46,6 +46,19 @@ The old capitalised URL `yashrai.in/YashRai_Resume.pdf` is still live — it is 
 rewrite in `vercel.json` pointing at the same file, so people holding the old
 link keep working. There is only ONE physical PDF; never re-add a second copy.
 
+## SEO
+- `index.html` holds the title/meta, a JSON-LD `@graph` (WebSite, ProfilePage,
+  Person, ItemList of projects) and a static copy of the main content inside
+  `#root` (`#seo-static`) for crawlers that don't run JS. It is hidden for JS
+  visitors via the `.js` class and replaced by React on mount.
+- Projects live in `src/data/projects.ts`. When you add or change one, update the
+  JSON-LD and `#seo-static` in `index.html` to match.
+- `public/robots.txt` and `public/sitemap.xml` are served at the site root; bump
+  `<lastmod>` when the content meaningfully changes.
+- `/3d/demo_one` (the 3D showroom walkthrough) is NOT in this repo: it is a
+  Vercel project-level route that proxies to a separate RaiYash Studio project.
+  It is `noindex` on purpose, so keep it out of the sitemap.
+
 ## Project Structure
 ```
 src/

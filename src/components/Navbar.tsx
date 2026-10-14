@@ -18,7 +18,7 @@ export default function Navbar() {
   }, []);
 
   return (
-    <nav className="fixed top-0 left-0 right-0 z-50 flex justify-center pt-4 md:pt-6 px-4 pointer-events-none">
+    <nav aria-label="Primary" className="fixed top-0 left-0 right-0 z-50 flex justify-center pt-4 md:pt-6 px-4 pointer-events-none">
       <div
         className={cn(
           "pointer-events-auto inline-flex items-center rounded-full backdrop-blur-md border border-white/10 bg-surface/80 px-1.5 py-1.5 sm:px-2 sm:py-2 transition-shadow duration-300",
@@ -27,7 +27,8 @@ export default function Navbar() {
       >
         {/* Logo */}
         <a
-          href="#"
+          href="#home"
+          aria-label="Yash Rai — back to top"
           className="group relative flex items-center justify-center w-8 h-8 sm:w-9 sm:h-9 rounded-full transition-transform duration-300 hover:scale-110 ml-0.5 sm:ml-1"
         >
           {/* Accent Gradient Border */}
@@ -44,9 +45,11 @@ export default function Navbar() {
         {/* Links */}
         <div className="flex items-center gap-0.5 sm:gap-2 ml-1 sm:ml-0">
           {NAV_LINKS.map((link) => (
-            <button
+            <a
               key={link}
-              onClick={() => {
+              href={`#${link.toLowerCase()}`}
+              onClick={(e) => {
+                e.preventDefault();
                 setActive(link);
                 const element = document.getElementById(link.toLowerCase());
                 if (element) {
@@ -61,7 +64,7 @@ export default function Navbar() {
               )}
             >
               {link}
-            </button>
+            </a>
           ))}
         </div>
 

@@ -1,31 +1,6 @@
 import { motion } from 'framer-motion';
-import { ArrowRight } from 'lucide-react';
-
-const PROJECTS = [
-  {
-    title: "Promptu",
-    image: "/promptu.png",
-    link: "https://chromewebstore.google.com/detail/promptu/gaafidhicjnpkdpcacfgehiafmliajah",
-    spanClass: "md:col-span-7 aspect-[4/3] md:aspect-[16/9]",
-  },
-  {
-    title: "Tour With Yash",
-    image: "/tourwithyash.png",
-    link: "https://tourwithyash.onrender.com/",
-    spanClass: "md:col-span-5 aspect-[4/3] md:aspect-[4/5]",
-  },
-  {
-    title: "Skillgigs Marketplace",
-    image: "https://images.unsplash.com/photo-1460925895917-afdab827c52f?q=80&w=800&auto=format&fit=crop",
-    spanClass: "md:col-span-5 aspect-[4/3] md:aspect-[4/5]",
-  },
-  {
-    title: "React UI and Components",
-    image: "/yashportfolio.png",
-    link: "https://yashdevportfolio.netlify.app/",
-    spanClass: "md:col-span-7 aspect-[4/3] md:aspect-[16/9]",
-  }
-];
+import { ArrowRight, ArrowUpRight } from 'lucide-react';
+import { PROJECTS, type Project } from '../data/projects';
 
 export default function SelectedWorks() {
   return (
@@ -51,62 +26,112 @@ export default function SelectedWorks() {
             </h2>
             
             <p className="text-muted text-sm md:text-base">
-              A selection of scalable frontend platforms and high-performance applications I've engineered.
+              A selection of scalable frontend platforms, high-performance applications and interactive 3D experiences I've engineered.
             </p>
           </div>
 
-          <button className="hidden md:inline-flex group relative items-center justify-center text-sm">
+          <a
+            href="https://github.com/yash01rai"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="hidden md:inline-flex group relative items-center justify-center text-sm"
+          >
             <span className="absolute inset-[-2px] rounded-full accent-gradient opacity-0 transition-opacity duration-300 group-hover:opacity-100 animate-gradient-shift -z-10"></span>
             <div className="relative flex items-center gap-2 bg-surface border border-stroke rounded-full px-6 py-3 backdrop-blur-md text-text-primary transition-colors group-hover:bg-bg group-hover:border-transparent">
               View all work
               <ArrowRight className="w-4 h-4 opacity-70 group-hover:opacity-100 group-hover:translate-x-1 transition-all" />
             </div>
-          </button>
+          </a>
         </motion.div>
 
         {/* Bento Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-12 gap-5 md:gap-6">
-          {PROJECTS.map((project, idx) => (
-            <div 
-              key={idx}
-              onClick={() => project.link && window.open(project.link, '_blank')}
-              className={`group relative bg-surface border border-stroke rounded-3xl overflow-hidden cursor-pointer ${project.spanClass}`}
-            >
-              {/* Background Image */}
-              <div className="absolute inset-0 w-full h-full">
-                <img 
-                  src={project.image} 
-                  alt={project.title}
-                  className="w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-105"
-                />
-              </div>
-
-              {/* Halftone Overlay */}
-              <div 
-                className="absolute inset-0 opacity-20 mix-blend-multiply pointer-events-none"
-                style={{
-                  backgroundImage: "radial-gradient(circle, #000 1px, transparent 1px)",
-                  backgroundSize: "4px 4px"
-                }}
-              />
-
-              {/* Hover Dark Overlay */}
-              <div className="absolute inset-0 bg-bg/70 opacity-0 backdrop-blur-sm transition-all duration-500 ease-out group-hover:opacity-100 group-hover:backdrop-blur-lg" />
-
-              {/* Hover Label */}
-              <div className="absolute inset-0 flex items-center justify-center opacity-0 scale-95 transition-all duration-500 ease-out group-hover:opacity-100 group-hover:scale-100">
-                <div className="relative p-[1.5px] rounded-full accent-gradient animate-gradient-shift shadow-xl">
-                  <div className="bg-white text-bg px-6 py-2.5 rounded-full flex items-center gap-2">
-                    <span className="text-sm font-medium">View —</span>
-                    <span className="font-display italic text-lg">{project.title}</span>
-                  </div>
-                </div>
-              </div>
-            </div>
+        <ul className="grid grid-cols-1 md:grid-cols-12 gap-5 md:gap-6" aria-label="Featured projects">
+          {PROJECTS.map((project) => (
+            <li key={project.title} className={project.spanClass}>
+              <ProjectCard project={project} />
+            </li>
           ))}
-        </div>
+        </ul>
 
       </div>
     </section>
+  );
+}
+
+function ProjectCard({ project }: { project: Project }) {
+  const content = (
+    <>
+      <div className={`relative w-full overflow-hidden rounded-3xl border border-stroke bg-surface ${project.imageClass}`}>
+        <img
+          src={project.image}
+          alt={project.imageAlt}
+          width={project.width}
+          height={project.height}
+          loading="lazy"
+          decoding="async"
+          style={project.objectPosition ? { objectPosition: project.objectPosition } : undefined}
+          className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-105"
+        />
+
+        {/* Halftone Overlay */}
+        <div
+          className="absolute inset-0 opacity-20 mix-blend-multiply pointer-events-none"
+          style={{
+            backgroundImage: "radial-gradient(circle, #000 1px, transparent 1px)",
+            backgroundSize: "4px 4px"
+          }}
+        />
+
+        {project.badge && (
+          <span className="absolute top-4 left-4 rounded-full bg-bg/70 backdrop-blur-md border border-white/10 px-3 py-1 text-[11px] uppercase tracking-[0.2em] text-text-primary">
+            {project.badge}
+          </span>
+        )}
+
+        {project.link && (
+          <>
+            {/* Hover Dark Overlay */}
+            <div className="absolute inset-0 bg-bg/70 opacity-0 backdrop-blur-sm transition-all duration-500 ease-out group-hover:opacity-100 group-hover:backdrop-blur-lg" />
+
+            {/* Hover Label */}
+            <div className="absolute inset-0 flex items-center justify-center opacity-0 scale-95 transition-all duration-500 ease-out group-hover:opacity-100 group-hover:scale-100">
+              <div className="relative p-[1.5px] rounded-full accent-gradient animate-gradient-shift shadow-xl">
+                <div className="bg-white text-bg px-6 py-2.5 rounded-full flex items-center gap-2">
+                  <span className="text-sm font-medium">View —</span>
+                  <span className="font-display italic text-lg">{project.title}</span>
+                </div>
+              </div>
+            </div>
+          </>
+        )}
+      </div>
+
+      <div className="pt-5 px-1">
+        <h3 className="flex items-center gap-2 text-xl md:text-2xl text-text-primary tracking-tight mb-2">
+          {project.title}
+          {project.link && (
+            <ArrowUpRight className="w-4 h-4 opacity-50 transition-all group-hover:opacity-100 group-hover:translate-x-0.5 group-hover:-translate-y-0.5" aria-hidden="true" />
+          )}
+        </h3>
+        <p className="text-muted text-sm leading-relaxed mb-4 max-w-2xl">{project.description}</p>
+        <ul className="flex flex-wrap gap-2" aria-label={`${project.title} tech stack`}>
+          {project.tech.map((t) => (
+            <li key={t} className="text-[11px] text-muted border border-stroke rounded-full px-3 py-1">
+              {t}
+            </li>
+          ))}
+        </ul>
+      </div>
+    </>
+  );
+
+  const cardClass = "group flex flex-col h-full";
+
+  return project.link ? (
+    <a href={project.link} target="_blank" rel="noopener" className={cardClass}>
+      {content}
+    </a>
+  ) : (
+    <article className={cardClass}>{content}</article>
   );
 }
