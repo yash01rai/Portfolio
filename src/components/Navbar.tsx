@@ -77,7 +77,7 @@ export default function Navbar() {
           className="group relative inline-flex items-center justify-center text-xs sm:text-sm text-text-primary mr-0.5 sm:mr-1 ml-1 sm:ml-0"
         >
           <span className="absolute inset-[-2px] rounded-full accent-gradient opacity-0 transition-opacity duration-300 group-hover:opacity-100 animate-gradient-shift"></span>
-          <div className="relative flex items-center gap-1 sm:gap-1.5 bg-surface rounded-full px-2 sm:px-4 py-1 sm:py-2 backdrop-blur-md">
+          <div className="relative flex items-center gap-1 sm:gap-1.5 bg-surface rounded-full px-2 sm:px-4 py-1 sm:py-2">
             <span className="hidden sm:inline">Say hi</span>
             <ArrowUpRight className="w-3.5 h-3.5 opacity-70 group-hover:opacity-100 transition-opacity" />
           </div>

@@ -148,7 +148,7 @@ export default function Explorations() {
             className="group relative inline-flex items-center justify-center text-sm shrink-0 mx-auto"
           >
             <span className="absolute inset-[-2px] rounded-full accent-gradient opacity-0 transition-opacity duration-300 group-hover:opacity-100 animate-gradient-shift -z-10"></span>
-            <div className="relative flex items-center gap-2 bg-surface border border-stroke rounded-full px-6 py-3 backdrop-blur-md text-text-primary transition-colors group-hover:bg-bg group-hover:border-transparent">
+            <div className="relative flex items-center gap-2 bg-surface border border-stroke rounded-full px-6 py-3 text-text-primary transition-colors group-hover:bg-bg group-hover:border-transparent">
               View source on GitHub
               <ArrowUpRight className="w-4 h-4 opacity-70 group-hover:opacity-100 transition-opacity" />
             </div>
@@ -170,8 +170,8 @@ export default function Explorations() {
               >
                 <LiveExperiment component={item.component} />
                 {/* Hover label overlay */}
-                <div className="absolute inset-0 bg-bg/50 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end justify-center backdrop-blur-[2px] pointer-events-none">
-                  <div className="mb-6 px-4 py-2 bg-white/10 backdrop-blur-md rounded-full border border-white/10">
+                <div className="absolute inset-0 bg-bg/50 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end justify-center group-hover:backdrop-blur-[2px] pointer-events-none">
+                  <div className="mb-6 px-4 py-2 bg-white/10 group-hover:backdrop-blur-md rounded-full border border-white/10">
                     <span className="text-xs text-text-primary tracking-wide font-medium">{item.label}</span>
                   </div>
                 </div>
@@ -189,8 +189,8 @@ export default function Explorations() {
               >
                 <LiveExperiment component={item.component} />
                 {/* Hover label overlay */}
-                <div className="absolute inset-0 bg-bg/50 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end justify-center backdrop-blur-[2px] pointer-events-none">
-                  <div className="mb-6 px-4 py-2 bg-white/10 backdrop-blur-md rounded-full border border-white/10">
+                <div className="absolute inset-0 bg-bg/50 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end justify-center group-hover:backdrop-blur-[2px] pointer-events-none">
+                  <div className="mb-6 px-4 py-2 bg-white/10 group-hover:backdrop-blur-md rounded-full border border-white/10">
                     <span className="text-xs text-text-primary tracking-wide font-medium">{item.label}</span>
                   </div>
                 </div>

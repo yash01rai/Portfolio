@@ -30,7 +30,7 @@ export default function Hero() {
       tl.fromTo(
         ".blur-in",
         { opacity: 0, filter: "blur(10px)", y: 20 },
-        { opacity: 1, filter: "blur(0px)", y: 0, duration: 1, stagger: 0.1 },
+        { opacity: 1, filter: "blur(0px)", y: 0, duration: 1, stagger: 0.1, clearProps: "filter" },
         "-=0.8" // Overlap with the previous animation
       );
     }, containerRef);

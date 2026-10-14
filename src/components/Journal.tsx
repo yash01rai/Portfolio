@@ -58,7 +58,7 @@ export default function Journal() {
 
           <button className="hidden md:inline-flex group relative items-center justify-center text-sm shrink-0">
             <span className="absolute inset-[-2px] rounded-full accent-gradient opacity-0 transition-opacity duration-300 group-hover:opacity-100 animate-gradient-shift -z-10"></span>
-            <div className="relative flex items-center gap-2 bg-surface border border-stroke rounded-full px-6 py-3 backdrop-blur-md text-text-primary transition-colors group-hover:bg-bg group-hover:border-transparent">
+            <div className="relative flex items-center gap-2 bg-surface border border-stroke rounded-full px-6 py-3 text-text-primary transition-colors group-hover:bg-bg group-hover:border-transparent">
               View all articles
               <ArrowRight className="w-4 h-4 opacity-70 group-hover:opacity-100 group-hover:translate-x-1 transition-all" />
             </div>

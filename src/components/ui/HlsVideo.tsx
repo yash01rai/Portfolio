@@ -75,6 +75,16 @@ export const HlsVideo = React.forwardRef<HTMLVideoElement, HlsVideoProps>(
       };
     }, [src, videoRef, shouldLoad]);
 
+    // Pause while off-screen: a looping background video otherwise keeps decoding
+    // and compositing every frame for the whole visit.
+    const visible = useInView(videoRef, '0px');
+    useEffect(() => {
+      const video = videoRef.current;
+      if (!video || !shouldLoad) return;
+      if (visible) video.play().catch(() => {});
+      else video.pause();
+    }, [visible, shouldLoad, videoRef]);
+
     return (
       <video
         ref={videoRef}

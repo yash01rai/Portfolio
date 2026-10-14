@@ -37,7 +37,7 @@ export default function SelectedWorks() {
             className="hidden md:inline-flex group relative items-center justify-center text-sm"
           >
             <span className="absolute inset-[-2px] rounded-full accent-gradient opacity-0 transition-opacity duration-300 group-hover:opacity-100 animate-gradient-shift -z-10"></span>
-            <div className="relative flex items-center gap-2 bg-surface border border-stroke rounded-full px-6 py-3 backdrop-blur-md text-text-primary transition-colors group-hover:bg-bg group-hover:border-transparent">
+            <div className="relative flex items-center gap-2 bg-surface border border-stroke rounded-full px-6 py-3 text-text-primary transition-colors group-hover:bg-bg group-hover:border-transparent">
               View all work
               <ArrowRight className="w-4 h-4 opacity-70 group-hover:opacity-100 group-hover:translate-x-1 transition-all" />
             </div>
@@ -73,9 +73,9 @@ function ProjectCard({ project }: { project: Project }) {
           className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-105"
         />
 
-        {/* Halftone Overlay */}
+        {/* Halftone Overlay (pure-black dots, so normal blending looks the same as multiply and is cheaper) */}
         <div
-          className="absolute inset-0 opacity-20 mix-blend-multiply pointer-events-none"
+          className="absolute inset-0 opacity-20 pointer-events-none"
           style={{
             backgroundImage: "radial-gradient(circle, #000 1px, transparent 1px)",
             backgroundSize: "4px 4px"
@@ -91,7 +91,7 @@ function ProjectCard({ project }: { project: Project }) {
         {project.link && (
           <>
             {/* Hover Dark Overlay */}
-            <div className="absolute inset-0 bg-bg/70 opacity-0 backdrop-blur-sm transition-all duration-500 ease-out group-hover:opacity-100 group-hover:backdrop-blur-lg" />
+            <div className="absolute inset-0 bg-bg/70 opacity-0 transition-all duration-500 ease-out group-hover:opacity-100 group-hover:backdrop-blur-lg" />
 
             {/* Hover Label */}
             <div className="absolute inset-0 flex items-center justify-center opacity-0 scale-95 transition-all duration-500 ease-out group-hover:opacity-100 group-hover:scale-100">
