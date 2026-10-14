@@ -32,7 +32,7 @@ export function SectionHeader({ eyebrow, heading, italic, sub, cta }: SectionHea
           {cta && (
             <button className="group relative inline-flex items-center justify-center rounded-full text-[13px] transition-transform duration-200 hover:scale-[1.03] shrink-0">
               <span className="absolute inset-[-2px] rounded-full bg-gradient-to-r from-[#89AACC] to-[#4E85BF] opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
-              <span className="relative flex items-center gap-2 px-[22px] py-2.5 rounded-full bg-surface border border-stroke text-text-primary backdrop-blur-md transition-colors duration-300 group-hover:bg-bg group-hover:border-transparent">
+              <span className="relative flex items-center gap-2 px-[22px] py-2.5 rounded-full bg-surface border border-stroke text-text-primary transition-colors duration-300 group-hover:bg-bg group-hover:border-transparent">
                 {cta} <span className="opacity-60 transition-transform duration-300 group-hover:translate-x-1">→</span>
               </span>
             </button>

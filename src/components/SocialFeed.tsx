@@ -540,7 +540,11 @@ export default function SocialFeed() {
   return (
     <section ref={sectionRef} id="social" className="relative overflow-hidden border-t border-white/5 bg-bg py-24">
       <FloatingSocialIcons containerRef={sectionRef} />
-      <div className="pointer-events-none absolute left-1/2 top-1/2 h-[600px] w-[600px] -translate-x-1/2 -translate-y-1/2 rounded-full bg-accent/5 blur-[120px]" />
+      {/* Soft glow. A radial gradient instead of blur(120px): same look, nothing to re-rasterise while scrolling. */}
+      <div
+        className="pointer-events-none absolute left-1/2 top-1/2 h-[840px] w-[840px] -translate-x-1/2 -translate-y-1/2"
+        style={{ background: 'radial-gradient(circle, hsl(0 0% 96% / 0.05) 0%, hsl(0 0% 96% / 0.035) 30%, transparent 70%)' }}
+      />
 
       <div className="relative z-10 mx-auto max-w-[900px] px-[5vw] sm:px-6">
         <SectionHeader
@@ -671,7 +675,7 @@ export default function SocialFeed() {
                   className="group relative inline-flex items-center justify-center rounded-full text-[13px] transition-transform duration-200 hover:scale-[1.03]"
                 >
                   <span className="absolute inset-[-2px] rounded-full bg-[#0A66C2] opacity-0 transition-opacity duration-300 group-hover:opacity-20" />
-                  <span className="relative flex items-center gap-2.5 rounded-full border border-stroke bg-surface px-5 py-2.5 text-text-primary backdrop-blur-md transition-colors duration-300 group-hover:border-[#0A66C2]/40">
+                  <span className="relative flex items-center gap-2.5 rounded-full border border-stroke bg-surface px-5 py-2.5 text-text-primary transition-colors duration-300 group-hover:border-[#0A66C2]/40">
                     <svg viewBox="0 0 24 24" className="h-4 w-4 shrink-0" aria-hidden>
                       <rect width="24" height="24" rx="4" fill="#0A66C2" />
                       <path fill="white" d="M6.94 5a2 2 0 1 1-4-.002 2 2 0 0 1 4 .002zM7 8.48H3V21h4V8.48zm6.32 0H9.34V21h3.94v-6.57c0-3.66 4.77-4 4.77 0V21H22v-7.93c0-6.17-7.06-5.94-8.72-2.91l.04-1.68z" />
@@ -688,7 +692,7 @@ export default function SocialFeed() {
                   className="group relative inline-flex items-center justify-center rounded-full text-[13px] transition-transform duration-200 hover:scale-[1.03]"
                 >
                   <span className="absolute inset-[-2px] rounded-full bg-white opacity-0 transition-opacity duration-300 group-hover:opacity-5" />
-                  <span className="relative flex items-center gap-2.5 rounded-full border border-stroke bg-surface px-5 py-2.5 text-text-primary backdrop-blur-md transition-colors duration-300 group-hover:border-white/20">
+                  <span className="relative flex items-center gap-2.5 rounded-full border border-stroke bg-surface px-5 py-2.5 text-text-primary transition-colors duration-300 group-hover:border-white/20">
                     <svg viewBox="0 0 24 24" className="h-3.5 w-3.5 shrink-0 fill-current" aria-hidden>
                       <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.746l7.73-8.835L1.254 2.25H8.08l4.253 5.622 5.911-5.622Zm-1.161 17.52h1.833L7.084 4.126H5.117z" />
                     </svg>
@@ -710,7 +714,7 @@ export default function SocialFeed() {
                 className="group relative inline-flex items-center justify-center rounded-full text-[13px] transition-transform duration-200 hover:scale-[1.03]"
               >
                 <span className="absolute inset-[-2px] rounded-full bg-gradient-to-r from-[#89AACC] to-[#4E85BF] opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
-                <span className="relative flex items-center gap-2 rounded-full border border-stroke bg-surface px-6 py-2.5 text-text-primary backdrop-blur-md transition-colors duration-300 group-hover:border-transparent group-hover:bg-bg">
+                <span className="relative flex items-center gap-2 rounded-full border border-stroke bg-surface px-6 py-2.5 text-text-primary transition-colors duration-300 group-hover:border-transparent group-hover:bg-bg">
                   {profileLink.label}
                   <ExternalLink className="h-3.5 w-3.5 opacity-50 transition-transform duration-300 group-hover:translate-x-1" />
                 </span>
